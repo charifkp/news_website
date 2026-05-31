@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - จัดการข่าวประชาสัมพันธ์</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: #f4f5f7;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    /* ===== LAYOUT ===== */
+    .app { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 220px;
+      background: #0C447C;
+      color: #fff;
+      padding: 1.5rem 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      font-size: 15px;
+      font-weight: 600;
+      padding: 0 1.25rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-logo span { font-size: 11px; font-weight: 400; opacity: 0.6; display: block; margin-top: 2px; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 1.25rem;
+      font-size: 14px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: background 0.15s, opacity 0.15s;
+      text-decoration: none;
+      color: #fff;
+    }
+    
+    .nav-item.active { background: rgba(255,255,255,0.12); opacity: 1; font-weight: 500; }
+    .nav-item:hover { background: rgba(255,255,255,0.08); opacity: 1; }
+    .nav-icon { font-size: 16px;}
+
+
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    .topbar {
+      background: #fff;
+      border-bottom: 0.5px solid #e0e0e0;
+      padding: 0 1.5rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .topbar-title { font-size: 16px; font-weight: 600; }
+
+    .btn-new {
+      padding: 7px 16px;
+      background: #185FA5;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Sarabun', sans-serif;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s;
+    }
+
+    .btn-new:hover { background: #0C447C; }
+
+    .content { padding: 1.5rem; overflow-y: auto; flex: 1; }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #eaf3de;
+      border: 0.5px solid #97C459;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #27500A;
+      z-index: 999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .toast.error { background: #fde8e8; border-color: #f09595; color: #A32D2D; }
+
+    /* ===== NEWS LIST VIEW ===== */
+    #view-list { display: block; }
+    #view-form { display: none; }
+
+    .filter-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1.25rem;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      padding: 8px 12px;
+      border: 0.5px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Sarabun', sans-serif;
+      outline: none;
+    }
+
+    .search-box:focus { border-color: #378ADD; box-shadow: 0 0 0 3px rgba(55,138,221,0.1); }
+
+    .filter-select {
+      padding: 8px 12px;
+      border: 0.5px solid #ccc;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Sarabun', sans-serif;
+      background: #fff;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .news-table {
+      background: #fff;
+      border: 0.5px solid #e0e0e0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 100px;
+      padding: 10px 16px;
+      background: #f8f9fa;
+      border-bottom: 0.5px solid #e0e0e0;
+      font-size: 12px;
+      font-weight: 500;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .news-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 100px;
+      padding: 14px 16px;
+      border-bottom: 0.5px solid #f0f0f0;
+      align-items: center;
+      transition: background 0.1s;
+    }
+
+    .news-row:last-child { border-bottom: none; }
+    .news-row:hover { background: #fafafa; }
+
+    .news-title-cell { font-size: 14px; font-weight: 500; color: #1a1a1a; }
+    .news-title-cell .sub { font-size: 12px; color: #999; font-weight: 400; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .badge {
+      display: inline-flex;
+      padding: 2px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 500;
+      background: #E6F1FB;
+      color: #0C447C;
+    }
+
+    .status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .dot.published { background: #4CAF50; }
+    .dot.draft { background: #FFC107; }
+
+    .cell-date { font-size: 13px; color: #666; }
+
+    .row-actions { display: flex; gap: 6px; }
+
+    .btn-edit, .btn-delete {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'Sarabun', sans-serif;
+      cursor: pointer;
+      border: 0.5px solid;
+      transition: background 0.15s;
+    }
+
+    .btn-edit { background: #fff; border-color: #378ADD; color: #185FA5; }
+    .btn-edit:hover { background: #E6F1FB; }
+
+    .btn-delete { background: #fff; border-color: #f09595; color: #E24B4A; }
+    .btn-delete:hover { background: #fde8e8; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .empty-state .big { font-size: 32px; margin-bottom: 8px; }
+
+    /* ===== FORM VIEW ===== */
+    .form-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-back {
+      padding: 6px 12px;
+      border: 0.5px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 13px;
+      font-family: 'Sarabun', sans-serif;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .btn-back:hover { background: #f0f0f0; }
+
+    .form-title { font-size: 16px; font-weight: 600; }
+
+    .form-layout {
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .card {
+      background: #fff;
+      border: 0.5px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .field { margin-bottom: 1rem; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"], textarea, select {
+      width: 100%;
+      font-size: 14px;
+      font-family: 'Sarabun', sans-serif;
+      padding: 8px 12px;
+      border: 0.5px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input[type="text"]:focus, textarea:focus, select:focus {
+      border-color: #378ADD;
+      box-shadow: 0 0 0 3px rgba(55,138,221,0.12);
+    }
+
+    textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .badge-input { display: flex; gap: 8px; align-items: center; }
+
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 500;
+      background: #E6F1FB;
+      color: #0C447C;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Tabs */
+    .tab-row {
+      display: flex;
+      border: 0.5px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 10px 0 1rem;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 8px 0;
+      font-size: 13px;
+      font-family: 'Sarabun', sans-serif;
+      border: none;
+      background: transparent;
+      color: #888;
+      cursor: pointer;
+    }
+
+    .tab-btn:not(:last-child) { border-right: 0.5px solid #ccc; }
+    .tab-btn.active { background: #f0f0f0; color: #1a1a1a; font-weight: 500; }
+
+    /* Drop zones */
+    .drop-zone {
+      border: 1.5px dashed #ccc;
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      background: #fafafa;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .drop-zone:hover, .drop-zone.drag-over { background: #f0f6ff; border-color: #378ADD; }
+    .drop-zone.pdf-mode { border-color: #f09595; background: #fff8f8; }
+    .drop-zone.pdf-mode:hover, .drop-zone.pdf-mode.drag-over { background: #fde8e8; border-color: #E24B4A; }
+
+    .drop-icon { font-size: 26px; margin-bottom: 6px; }
+    .drop-text { font-size: 14px; color: #555; }
+    .drop-sub { font-size: 12px; color: #aaa; margin-top: 4px; }
+
+    .img-preview-wrap { display: none; position: relative; }
+    .img-preview-wrap img { width: 100%; max-height: 160px; object-fit: cover; border-radius: 8px; }
+
+    .img-remove {
+      position: absolute; top: 8px; right: 8px;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.5);
+      color: #fff; border: none; cursor: pointer; font-size: 12px;
+    }
+
+    .pdf-file-row {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #fff0f0;
+      border: 0.5px solid #f09595;
+      border-radius: 8px;
+    }
+
+    .pdf-icon-box {
+      width: 34px; height: 34px;
+      background: #E24B4A;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 10px; font-weight: 700; flex-shrink: 0;
+    }
+
+    .pdf-info { flex: 1; min-width: 0; }
+    .pdf-name { font-size: 12px; color: #A32D2D; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pdf-size { font-size: 11px; color: #E24B4A; margin-top: 1px; }
+    .pdf-remove { background: none; border: none; cursor: pointer; color: #E24B4A; font-size: 15px; }
+
+    /* Preview card */
+    .preview-card {
+      background: #fff;
+      border: 0.5px solid #e0e0e0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .preview-section-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .prev-img-area {
+      height: 85px;
+      background: #E6F1FB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .prev-placeholder { font-size: 26px; color: #B5D4F4; }
+
+    .prev-img-area img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: none;
+      position: absolute; top: 0; left: 0;
+    }
+
+    .prev-body { padding: 10px 12px; }
+    .prev-badge { display: inline-flex; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 500; background: #E6F1FB; color: #0C447C; margin-bottom: 6px; }
+    .prev-title { font-size: 13px; font-weight: 500; color: #1a1a1a; margin-bottom: 3px; line-height: 1.4; }
+    .prev-desc { font-size: 11px; color: #666; line-height: 1.5; margin-bottom: 5px; }
+    .prev-date { font-size: 10px; color: #aaa; }
+    .prev-pdf { display: none; align-items: center; gap: 4px; margin-top: 6px; padding: 4px 8px; background: #fff0f0; border-radius: 5px; font-size: 10px; color: #A32D2D; }
+
+    /* Form actions */
+    .form-actions {
+      display: flex; gap: 10px; justify-content: flex-end; margin-top: 1rem;
+    }
+
+    .btn-cancel-form {
+      padding: 8px 18px; font-size: 14px;
+      font-family: 'Sarabun', sans-serif;
+      border: 0.5px solid #ccc; border-radius: 8px;
+      background: transparent; color: #666; cursor: pointer;
+    }
+
+    .btn-cancel-form:hover { background: #f0f0f0; }
+
+    .btn-save {
+      padding: 8px 20px; font-size: 14px;
+      font-family: 'Sarabun', sans-serif;
+      border: none; border-radius: 8px;
+      background: #185FA5; color: #fff; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.15s;
+    }
+
+    .btn-save:hover { background: #0C447C; }
+
+    /* ===== DELETE MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      width: 340px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+
+    .modal-icon { font-size: 36px; margin-bottom: 10px; }
+    .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+    .modal-desc { font-size: 13px; color: #666; line-height: 1.5; margin-bottom: 1.25rem; }
+
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+    .btn-modal-cancel {
+      padding: 7px 16px; font-size: 13px;
+      font-family: 'Sarabun', sans-serif;
+      border: 0.5px solid #ccc; border-radius: 7px;
+      background: #fff; color: #555; cursor: pointer;
+    }
+
+    .btn-modal-delete {
+      padding: 7px 16px; font-size: 13px;
+      font-family: 'Sarabun', sans-serif;
+      border: none; border-radius: 7px;
+      background: #E24B4A; color: #fff; cursor: pointer;
+    }
+
+    @media (max-width: 700px) {
+      .sidebar { display: none; }
+      .form-layout { grid-template-columns: 1fr; }
+      .table-header, .news-row { grid-template-columns: 1fr 80px; }
+      .table-header .h-badge,
+      .table-header .h-status,
+      .table-header .h-date,
+      .news-row .cell-badge,
+      .news-row .cell-status,
+      .news-row .cell-date { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      📰 News Admin
+      <span>ระบบจัดการข่าว</span>
+    </div>
+    
+
+    <a class="nav-item" href="/index.html">
+      <span class="nav-icon">🏠</span> หน้าหลัก
+    </a>
+
+    <a class="nav-item active" href="/upload.html">
+      <span class="nav-icon">📋</span> จัดการข่าว
+    </a>
+    
+    <a class="nav-item" href="/dashboard.html">
+      <span class="nav-icon">📊</span> Dashboard
+    </a>
+    <a class="nav-item" href="#" onclick="logout()" style="margin-top:auto;">
+        <span class="nav-icon">🚪</span> ออกจากระบบ
+    </a>
+
+
+    <div class="nav-item" style="opacity:0.4; cursor:default;">⚙️ ตั้งค่า</div>
+  </div>
+
+  <div class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">จัดการข่าวประชาสัมพันธ์</div>
+      <button class="btn-new" onclick="openCreate()" id="btn-new-top">+ เพิ่มข่าวใหม่</button>
+    </div>
+
+    <div class="content">
+      <!-- Toast -->
+      <div class="toast" id="toast"></div>
+
+      <!-- ===== LIST VIEW ===== -->
+      <div id="view-list">
+        <div class="filter-row">
+          <input class="search-box" type="text" id="search-input" placeholder="🔍  ค้นหาหัวข้อข่าว..." oninput="renderList()">
+          <select class="filter-select" id="filter-status" onchange="renderList()">
+            <option value="">ทุกสถานะ</option>
+            <option value="เผยแพร่แล้ว">เผยแพร่แล้ว</option>
+            <option value="ฉบับร่าง">ฉบับร่าง</option>
+          </select>
+          <select class="filter-select" id="filter-badge" onchange="renderList()">
+            <option value="">ทุกหมวดหมู่</option>
+          </select>
+        </div>
+
+        <div class="news-table">
+          <div class="table-header">
+            <div>หัวข้อข่าว</div>
+            <div class="h-badge">หมวดหมู่</div>
+            <div class="h-status">สถานะ</div>
+            <div class="h-date">วันที่</div>
+            <div></div>
+          </div>
+          <div id="news-list-body"></div>
+        </div>
+      </div>
+
+      <!-- ===== FORM VIEW ===== -->
+      <div id="view-form">
+        <div class="form-header">
+          <button class="btn-back" onclick="backToList()">← กลับ</button>
+          <div class="form-title" id="form-title">เพิ่มข่าวใหม่</div>
+        </div>
+
+        <div class="form-layout">
+          <div>
+            <div class="card">
+              <div class="field">
+                <label for="f-badge">หมวดหมู่ (badge)</label>
+                <div class="badge-input">
+                  <input type="text" id="f-badge" placeholder="เช่น บริการ, ประกาศ" oninput="livePreview()">
+                  <span class="badge-live" id="f-badge-live">หมวดหมู่</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="f-title">หัวข้อข่าว *</label>
+                <input type="text" id="f-title" placeholder="กรอกหัวข้อข่าว" oninput="livePreview()">
+              </div>
+              <div class="field">
+                <label for="f-desc">เนื้อหาสั้น</label>
+                <textarea id="f-desc" placeholder="สรุปเนื้อหาข่าวสั้นๆ" oninput="livePreview()"></textarea>
+              </div>
+              <div class="row2">
+                <div class="field">
+                  <label for="f-date">วันที่เผยแพร่</label>
+                  <input type="text" id="f-date" placeholder="เช่น 5 พ.ค. 2568" oninput="livePreview()">
+                </div>
+                <div class="field">
+                  <label for="f-status">สถานะ</label>
+                  <select id="f-status">
+                    <option>เผยแพร่แล้ว</option>
+                    <option>ฉบับร่าง</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <label>ไฟล์แนบ</label>
+              <div class="tab-row">
+                <button class="tab-btn active" id="ftab-img" onclick="fSwitchTab('img')">🖼 รูปภาพ</button>
+                <button class="tab-btn" id="ftab-pdf" onclick="fSwitchTab('pdf')">📄 PDF</button>
+              </div>
+
+              <div id="fsec-img">
+                <div class="drop-zone" id="fdrop-img"
+                  onclick="document.getElementById('f-img-input').click()"
+                  ondragover="fOnDrag(event,'img')" ondragleave="fOffDrag('img')" ondrop="fOnDrop(event,'img')">
+                  <div class="drop-icon">🖼</div>
+                  <p class="drop-text">คลิกหรือลากรูปมาวาง</p>
+                  <p class="drop-sub">PNG, JPG ไม่เกิน 5MB</p>
+                </div>
+                <div class="img-preview-wrap" id="fimg-preview">
+                  <img id="fimg-thumb" src="" alt="">
+                  <button class="img-remove" onclick="fRemoveImg()">✕</button>
+                </div>
+                <input type="file" id="f-img-input" accept="image/*" style="display:none">
+              </div>
+
+              <div id="fsec-pdf" style="display:none;">
+                <div class="drop-zone pdf-mode" id="fdrop-pdf"
+                  onclick="document.getElementById('f-pdf-input').click()"
+                  ondragover="fOnDrag(event,'pdf')" ondragleave="fOffDrag('pdf')" ondrop="fOnDrop(event,'pdf')">
+                  <div class="drop-icon">📄</div>
+                  <p class="drop-text">คลิกหรือลากไฟล์ PDF มาวาง</p>
+                  <p class="drop-sub">PDF ไม่เกิน 20MB</p>
+                </div>
+                <div class="pdf-file-row" id="fpdf-row">
+                  <div class="pdf-icon-box">PDF</div>
+                  <div class="pdf-info">
+                    <div class="pdf-name" id="fpdf-name">-</div>
+                    <div class="pdf-size" id="fpdf-size">-</div>
+                  </div>
+                  <button class="pdf-remove" onclick="fRemovePdf()">✕</button>
+                </div>
+                <input type="file" id="f-pdf-input" accept="application/pdf" style="display:none">
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn-cancel-form" onclick="backToList()">ยกเลิก</button>
+              <button class="btn-save" onclick="saveNews()">💾 บันทึก</button>
+            </div>
+          </div>
+
+          <!-- Right: Preview -->
+          <div>
+            <div class="preview-section-title">ตัวอย่าง</div>
+            <div class="preview-card">
+              <div class="prev-img-area" id="prev-img-area">
+                <span class="prev-placeholder">🖼</span>
+                <img id="prev-cover" src="" alt="">
+              </div>
+              <div class="prev-body">
+                <div class="prev-badge" id="prev-badge">หมวดหมู่</div>
+                <div class="prev-title" id="prev-title">หัวข้อข่าว</div>
+                <div class="prev-desc" id="prev-desc">เนื้อหาสั้นๆ</div>
+                <div class="prev-date" id="prev-date"></div>
+                <div class="prev-pdf" id="prev-pdf">📄 <span id="prev-pdf-name"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-icon">🗑️</div>
+    <div class="modal-title">ยืนยันการลบข่าว</div>
+    <div class="modal-desc" id="modal-desc">คุณต้องการลบข่าวนี้ใช่ไหม? การดำเนินการนี้ไม่สามารถย้อนกลับได้</div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn-modal-delete" onclick="confirmDelete()">ลบข่าว</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== DATA =====
+  var newsList = [
+    { id: 1, badge: 'บริการ', title: 'ระบบลงทะเบียนออนไลน์เปิดให้บริการแล้ว', desc: 'นักศึกษาสามารถลงทะเบียนผ่านระบบออนไลน์ได้ตั้งแต่วันนี้เป็นต้นไป', date: '5 พ.ค. 2568', status: 'เผยแพร่แล้ว', imgSrc: '', pdfName: '' },
+    { id: 2, badge: 'ประกาศ', title: 'ปิดให้บริการชั่วคราวเพื่อบำรุงรักษาระบบ', desc: 'ระบบจะปิดให้บริการในวันเสาร์ที่ 10 พ.ค. 2568 เวลา 22:00 - 24:00 น.', date: '3 พ.ค. 2568', status: 'เผยแพร่แล้ว', imgSrc: '', pdfName: '' },
+    { id: 3, badge: 'กิจกรรม', title: 'งานสัมมนาวิชาการประจำปี 2568', desc: 'ขอเชิญนักศึกษาและบุคลากรเข้าร่วมงานสัมมนาวิชาการประจำปี', date: '1 พ.ค. 2568', status: 'ฉบับร่าง', imgSrc: '', pdfName: 'program_2568.pdf' },
+  ];
+
+  var nextId = 4;
+  var editingId = null;
+  var deleteId = null;
+  var fActiveTab = 'img';
+  var fImgData = '';
+  var fPdfName = '';
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('f-img-input').addEventListener('change', function() { fHandleImg(this.files[0]); });
+    document.getElementById('f-pdf-input').addEventListener('change', function() { fHandlePdf(this.files[0]); });
+    renderList();
+    updateBadgeFilter();
+  });
+
+  // ===== LIST =====
+  function renderList() {
+    var q = document.getElementById('search-input').value.toLowerCase();
+    var fStatus = document.getElementById('filter-status').value;
+    var fBadge = document.getElementById('filter-badge').value;
+
+    var filtered = newsList.filter(function(n) {
+      return (!q || n.title.toLowerCase().includes(q) || n.badge.toLowerCase().includes(q))
+        && (!fStatus || n.status === fStatus)
+        && (!fBadge || n.badge === fBadge);
+    });
+
+    var body = document.getElementById('news-list-body');
+    if (filtered.length === 0) {
+      body.innerHTML = '<div class="empty-state"><div class="big">📭</div>ไม่พบข่าว</div>';
+      return;
+    }
+
+    body.innerHTML = filtered.map(function(n) {
+      return '<div class="news-row">'
+        + '<div class="news-title-cell">' + esc(n.title) + '<div class="sub">' + esc(n.desc) + '</div></div>'
+        + '<div class="cell-badge"><span class="badge">' + esc(n.badge) + '</span></div>'
+        + '<div class="cell-status"><span class="status-dot"><span class="dot ' + (n.status === 'เผยแพร่แล้ว' ? 'published' : 'draft') + '"></span>' + esc(n.status) + '</span></div>'
+        + '<div class="cell-date">' + esc(n.date) + '</div>'
+        + '<div class="row-actions">'
+        + '<button class="btn-edit" onclick="openEdit(' + n.id + ')">แก้ไข</button>'
+        + '<button class="btn-delete" onclick="openDelete(' + n.id + ')">ลบ</button>'
+        + '</div></div>';
+    }).join('');
+  }
+
+  function updateBadgeFilter() {
+    var badges = [...new Set(newsList.map(function(n) { return n.badge; }))];
+    var sel = document.getElementById('filter-badge');
+    var cur = sel.value;
+    sel.innerHTML = '<option value="">ทุกหมวดหมู่</option>'
+      + badges.map(function(b) { return '<option value="' + esc(b) + '"' + (b === cur ? ' selected' : '') + '>' + esc(b) + '</option>'; }).join('');
+  }
+
+  function esc(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ===== CRUD =====
+  function openCreate() {
+    editingId = null;
+    resetForm();
+    document.getElementById('form-title').textContent = 'เพิ่มข่าวใหม่';
+    document.getElementById('topbar-title').textContent = 'เพิ่มข่าวใหม่';
+    document.getElementById('btn-new-top').style.display = 'none';
+    document.getElementById('view-list').style.display = 'none';
+    document.getElementById('view-form').style.display = 'block';
+  }
+
+  function openEdit(id) {
+    var n = newsList.find(function(x) { return x.id === id; });
+    if (!n) return;
+    editingId = id;
+    resetForm();
+    document.getElementById('f-badge').value = n.badge;
+    document.getElementById('f-title').value = n.title;
+    document.getElementById('f-desc').value = n.desc;
+    document.getElementById('f-date').value = n.date;
+    document.getElementById('f-status').value = n.status;
+
+    if (n.imgSrc) {
+      fImgData = n.imgSrc;
+      document.getElementById('fdrop-img').style.display = 'none';
+      document.getElementById('fimg-preview').style.display = 'block';
+      document.getElementById('fimg-thumb').src = n.imgSrc;
+      document.getElementById('prev-cover').src = n.imgSrc;
+      document.getElementById('prev-cover').style.display = 'block';
+      document.querySelector('.prev-placeholder').style.display = 'none';
+    }
+
+    if (n.pdfName) {
+      fPdfName = n.pdfName;
+      fSwitchTab('pdf');
+      document.getElementById('fdrop-pdf').style.display = 'none';
+      document.getElementById('fpdf-row').style.display = 'flex';
+      document.getElementById('fpdf-name').textContent = n.pdfName;
+      document.getElementById('fpdf-size').textContent = '';
+      document.getElementById('prev-pdf').style.display = 'flex';
+      document.getElementById('prev-pdf-name').textContent = n.pdfName;
+    }
+
+    livePreview();
+    document.getElementById('form-title').textContent = 'แก้ไขข่าว';
+    document.getElementById('topbar-title').textContent = 'แก้ไขข่าว';
+    document.getElementById('btn-new-top').style.display = 'none';
+    document.getElementById('view-list').style.display = 'none';
+    document.getElementById('view-form').style.display = 'block';
+  }
+
+  function saveNews() {
+    var title = document.getElementById('f-title').value.trim();
+    if (!title) { showToast('กรุณากรอกหัวข้อข่าว', true); return; }
+
+    var data = {
+      badge: document.getElementById('f-badge').value.trim() || 'ทั่วไป',
+      title: title,
+      desc: document.getElementById('f-desc').value.trim(),
+      date: document.getElementById('f-date').value.trim(),
+      status: document.getElementById('f-status').value,
+      imgSrc: fImgData,
+      pdfName: fPdfName,
+    };
+
+    if (editingId !== null) {
+      var idx = newsList.findIndex(function(x) { return x.id === editingId; });
+      if (idx > -1) { newsList[idx] = Object.assign({ id: editingId }, data); }
+      showToast('แก้ไขข่าวเรียบร้อยแล้ว ✓');
+    } else {
+      newsList.unshift(Object.assign({ id: nextId++ }, data));
+      showToast('เพิ่มข่าวใหม่เรียบร้อยแล้ว ✓');
+    }
+
+    updateBadgeFilter();
+    backToList();
+    renderList();
+  }
+
+  function openDelete(id) {
+    deleteId = id;
+    var n = newsList.find(function(x) { return x.id === id; });
+    document.getElementById('modal-desc').textContent = 'คุณต้องการลบข่าว "' + (n ? n.title : '') + '" ใช่ไหม? การดำเนินการนี้ไม่สามารถย้อนกลับได้';
+    document.getElementById('modal-overlay').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').style.display = 'none';
+    deleteId = null;
+  }
+
+  function confirmDelete() {
+    newsList = newsList.filter(function(x) { return x.id !== deleteId; });
+    closeModal();
+    renderList();
+    updateBadgeFilter();
+    showToast('ลบข่าวเรียบร้อยแล้ว ✓');
+  }
+
+  function backToList() {
+    document.getElementById('view-form').style.display = 'none';
+    document.getElementById('view-list').style.display = 'block';
+    document.getElementById('btn-new-top').style.display = '';
+    document.getElementById('topbar-title').textContent = 'จัดการข่าวประชาสัมพันธ์';
+  }
+
+  // ===== FORM HELPERS =====
+  function resetForm() {
+    document.getElementById('f-badge').value = '';
+    document.getElementById('f-title').value = '';
+    document.getElementById('f-desc').value = '';
+    document.getElementById('f-date').value = '';
+    document.getElementById('f-status').value = 'เผยแพร่แล้ว';
+    fImgData = ''; fPdfName = '';
+    fSwitchTab('img');
+    fRemoveImg(); fRemovePdf();
+    livePreview();
+  }
+
+  function livePreview() {
+    var badge = document.getElementById('f-badge').value || 'หมวดหมู่';
+    document.getElementById('f-badge-live').textContent = badge;
+    document.getElementById('prev-badge').textContent = badge;
+    document.getElementById('prev-title').textContent = document.getElementById('f-title').value || 'หัวข้อข่าว';
+    document.getElementById('prev-desc').textContent = document.getElementById('f-desc').value || 'เนื้อหาสั้นๆ';
+    document.getElementById('prev-date').textContent = document.getElementById('f-date').value || '';
+  }
+
+  // Tab
+  function fSwitchTab(tab) {
+    fActiveTab = tab;
+    document.getElementById('fsec-img').style.display = tab === 'img' ? 'block' : 'none';
+    document.getElementById('fsec-pdf').style.display = tab === 'pdf' ? 'block' : 'none';
+    document.getElementById('ftab-img').classList.toggle('active', tab === 'img');
+    document.getElementById('ftab-pdf').classList.toggle('active', tab === 'pdf');
+  }
+
+  // Image
+  function fHandleImg(file) {
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      fImgData = e.target.result;
+      document.getElementById('fdrop-img').style.display = 'none';
+      document.getElementById('fimg-preview').style.display = 'block';
+      document.getElementById('fimg-thumb').src = fImgData;
+      document.getElementById('prev-cover').src = fImgData;
+      document.getElementById('prev-cover').style.display = 'block';
+      document.querySelector('.prev-placeholder').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function fRemoveImg() {
+    fImgData = '';
+    document.getElementById('fdrop-img').style.display = 'block';
+    document.getElementById('fimg-preview').style.display = 'none';
+    document.getElementById('f-img-input').value = '';
+    document.getElementById('prev-cover').style.display = 'none';
+    document.querySelector('.prev-placeholder').style.display = '';
+  }
+
+  // PDF
+  function fHandlePdf(file) {
+    if (!file) return;
+    fPdfName = file.name;
+    document.getElementById('fdrop-pdf').style.display = 'none';
+    document.getElementById('fpdf-row').style.display = 'flex';
+    document.getElementById('fpdf-name').textContent = file.name;
+    var kb = file.size / 1024;
+    document.getElementById('fpdf-size').textContent = kb > 1024 ? (kb/1024).toFixed(1)+' MB' : Math.round(kb)+' KB';
+    document.getElementById('prev-pdf').style.display = 'flex';
+    document.getElementById('prev-pdf-name').textContent = file.name;
+  }
+
+  function fRemovePdf() {
+    fPdfName = '';
+    document.getElementById('fdrop-pdf').style.display = 'block';
+    document.getElementById('fpdf-row').style.display = 'none';
+    document.getElementById('f-pdf-input').value = '';
+    document.getElementById('prev-pdf').style.display = 'none';
+  }
+
+  // Drag & drop
+  function fOnDrag(e, type) { e.preventDefault(); document.getElementById('fdrop-'+type).classList.add('drag-over'); }
+  function fOffDrag(type) { document.getElementById('fdrop-'+type).classList.remove('drag-over'); }
+  function fOnDrop(e, type) {
+    e.preventDefault(); fOffDrag(type);
+    var f = e.dataTransfer.files[0];
+    if (!f) return;
+    if (type === 'img') fHandleImg(f); else fHandlePdf(f);
+  }
+
+  // Toast
+  function showToast(msg, isError) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast' + (isError ? ' error' : '');
+    t.style.display = 'flex';
+    setTimeout(function() { t.style.display = 'none'; }, 3000);
+  }
+
+  // Close modal on overlay click
+  document.getElementById('modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // logout
+  function logout() {
+    sessionStorage.removeItem('isAdmin');
+    sessionStorage.removeItem("adminUser");
+    window.location.href = '/admin-login.html';
+  }
+</script>
+</body>
+</html>

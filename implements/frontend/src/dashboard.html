@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: #f4f5f7;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    .app { display: flex; min-height: 100vh; }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: 220px;
+      background: #0C447C;
+      color: #fff;
+      padding: 1.5rem 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      font-size: 15px;
+      font-weight: 600;
+      padding: 0 1.25rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-logo span {
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.6;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 1.25rem;
+      font-size: 14px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: background 0.15s, opacity 0.15s;
+      text-decoration: none;
+      color: #fff;
+    }
+
+
+    
+    .nav-item.active { background: rgba(255,255,255,0.12); opacity: 1; font-weight: 500; }
+    .nav-item:hover { background: rgba(255,255,255,0.08); opacity: 1; }
+    .nav-icon { font-size: 16px; }
+
+    /* ===== MAIN ===== */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    .topbar {
+      background: #fff;
+      border-bottom: 0.5px solid #e0e0e0;
+      padding: 0 1.5rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .topbar-title { font-size: 16px; font-weight: 600; }
+
+    .topbar-date { font-size: 13px; color: #888; }
+
+    .content { padding: 1.5rem; overflow-y: auto; flex: 1; }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    /* ===== METRIC CARDS ===== */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric {
+      background: #efefef;
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .metric-value {
+      font-size: 26px;
+      font-weight: 600;
+      color: #1a1a1a;
+      line-height: 1;
+    }
+
+    .metric-sub {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 5px;
+    }
+
+    .metric-sub.up { color: #3B6D11; }
+    .metric-sub.down { color: #A32D2D; }
+
+    /* ===== CHARTS ROW ===== */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 12px;
+      margin-bottom: 1.25rem;
+    }
+
+    .card {
+      background: #fff;
+      border: 0.5px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .legend span { display: flex; align-items: center; gap: 5px; }
+
+    .dot-sq {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ===== BOTTOM ROW ===== */
+    .bottom-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* ===== ACTIVITY ===== */
+    .activity-list { list-style: none; }
+
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 0.5px solid #f0f0f0;
+    }
+
+    .activity-item:last-child { border-bottom: none; }
+
+    .act-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 13px;
+    }
+
+    .act-icon.add { background: #EAF3DE; color: #3B6D11; }
+    .act-icon.edit { background: #E6F1FB; color: #185FA5; }
+    .act-icon.del { background: #FCEBEB; color: #A32D2D; }
+
+    .act-text { font-size: 13px; color: #1a1a1a; line-height: 1.4; }
+    .act-time { font-size: 11px; color: #aaa; margin-top: 2px; }
+
+    /* ===== STATUS TABLE ===== */
+    .status-list { list-style: none; }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 0.5px solid #f0f0f0;
+      font-size: 13px;
+      gap: 8px;
+    }
+
+    .status-row:last-child { border-bottom: none; }
+
+    .badge-pill {
+      display: inline-flex;
+      padding: 2px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .badge-pub { background: #EAF3DE; color: #27500A; }
+    .badge-draft { background: #FAEEDA; color: #633806; }
+    .badge-cat { background: #E6F1FB; color: #0C447C; }
+
+    .count-num { font-weight: 500; color: #1a1a1a; }
+
+    .donut-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .donut-legend span { display: flex; align-items: center; gap: 6px; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .metric-grid { grid-template-columns: repeat(2, 1fr); }
+      .charts-row { grid-template-columns: 1fr; }
+      .bottom-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 500px) {
+      .metric-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      📰 News Admin
+      <span>ระบบจัดการข่าว</span>
+    </div>
+    
+
+    <a class="nav-item" href="/index.html">
+      <span class="nav-icon">🏠</span> หน้าหลัก
+    </a>
+
+    <a class="nav-item" href="/upload.html">
+      <span class="nav-icon">📋</span> จัดการข่าว
+    </a>
+     <a class="nav-item" href="/dashboard.html">
+      <span class="nav-icon">📊</span> Dashboard
+    </a>
+    
+    <a class="nav-item" href="#" onclick="logout()" style="margin-top:auto;">
+        <span class="nav-icon">🚪</span> ออกจากระบบ
+    </a>
+    
+    <div class="nav-item" style="opacity:0.4; cursor:default;">⚙️ ตั้งค่า</div>
+  </div>
+
+  <div class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-title">Dashboard</div>
+      <div class="topbar-date" id="today-date"></div>
+    </div>
+
+    <div class="content">
+
+      <!-- Metric Cards -->
+      <div class="section-label">ภาพรวมระบบ</div>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-label">📰 ข่าวทั้งหมด</div>
+          <div class="metric-value">48</div>
+          <div class="metric-sub up">↑ 6 จากเดือนที่แล้ว</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">✅ เผยแพร่แล้ว</div>
+          <div class="metric-value">35</div>
+          <div class="metric-sub">72% ของทั้งหมด</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">✏️ ฉบับร่าง</div>
+          <div class="metric-value">13</div>
+          <div class="metric-sub down">3 รอเผยแพร่</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">👁 ยอดดูเดือนนี้</div>
+          <div class="metric-value">2,841</div>
+          <div class="metric-sub up">↑ 18% จากเดือนที่แล้ว</div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="section-label">สถิติการเผยแพร่</div>
+      <div class="charts-row">
+        <div class="card">
+          <div class="card-title">จำนวนข่าวที่เผยแพร่รายเดือน</div>
+          <div class="legend">
+            <span><span class="dot-sq" style="background:#378ADD;"></span>เผยแพร่แล้ว</span>
+            <span><span class="dot-sq" style="background:#EF9F27;"></span>ฉบับร่าง</span>
+          </div>
+          <div style="position:relative;height:200px;">
+            <canvas id="barChart" role="img" aria-label="Bar chart of monthly news published Jan-Jun 2025">จำนวนข่าวรายเดือน ม.ค.-มิ.ย. 2568</canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">หมวดหมู่ข่าว</div>
+          <div style="position:relative;height:160px;">
+            <canvas id="donutChart" role="img" aria-label="Donut chart of news categories">บริการ 40%, ประกาศ 30%, กิจกรรม 20%, อื่นๆ 10%</canvas>
+          </div>
+          <div class="donut-legend">
+            <span><span class="dot-sq" style="background:#378ADD;"></span>บริการ 40%</span>
+            <span><span class="dot-sq" style="background:#1D9E75;"></span>ประกาศ 30%</span>
+            <span><span class="dot-sq" style="background:#EF9F27;"></span>กิจกรรม 20%</span>
+            <span><span class="dot-sq" style="background:#888780;"></span>อื่นๆ 10%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Row -->
+      <div class="section-label">รายละเอียด</div>
+      <div class="bottom-row">
+        <div class="card">
+          <div class="card-title">กิจกรรมล่าสุด</div>
+          <ul class="activity-list">
+            <li class="activity-item">
+              <div class="act-icon add">➕</div>
+              <div>
+                <div class="act-text">เพิ่มข่าว "ระบบลงทะเบียนออนไลน์เปิดให้บริการ"</div>
+                <div class="act-time">5 พ.ค. 2568 · 10:23</div>
+              </div>
+            </li>
+            <li class="activity-item">
+              <div class="act-icon edit">✏️</div>
+              <div>
+                <div class="act-text">แก้ไขข่าว "ปิดให้บริการชั่วคราวเพื่อบำรุงรักษา"</div>
+                <div class="act-time">4 พ.ค. 2568 · 14:05</div>
+              </div>
+            </li>
+            <li class="activity-item">
+              <div class="act-icon del">🗑</div>
+              <div>
+                <div class="act-text">ลบข่าว "ประกาศผลการคัดเลือก รอบที่ 1"</div>
+                <div class="act-time">3 พ.ค. 2568 · 09:11</div>
+              </div>
+            </li>
+            <li class="activity-item">
+              <div class="act-icon add">➕</div>
+              <div>
+                <div class="act-text">เพิ่มข่าว "งานสัมมนาวิชาการประจำปี 2568"</div>
+                <div class="act-time">1 พ.ค. 2568 · 11:40</div>
+              </div>
+            </li>
+            <li class="activity-item">
+              <div class="act-icon edit">✏️</div>
+              <div>
+                <div class="act-text">แก้ไขข่าว "ประกาศรายชื่อสมาชิกสภานักศึกษา"</div>
+                <div class="act-time">29 เม.ย. 2568 · 16:30</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">สถานะข่าวแยกตามหมวดหมู่</div>
+          <ul class="status-list">
+            <li class="status-row">
+              <span class="badge-pill badge-cat">บริการ</span>
+              <span><span class="count-num">19</span> <span style="color:#aaa;font-size:12px;">ข่าว</span></span>
+              <span class="badge-pill badge-pub">เผยแพร่ 15</span>
+            </li>
+            <li class="status-row">
+              <span class="badge-pill badge-cat">ประกาศ</span>
+              <span><span class="count-num">14</span> <span style="color:#aaa;font-size:12px;">ข่าว</span></span>
+              <span class="badge-pill badge-pub">เผยแพร่ 10</span>
+            </li>
+            <li class="status-row">
+              <span class="badge-pill badge-cat">กิจกรรม</span>
+              <span><span class="count-num">10</span> <span style="color:#aaa;font-size:12px;">ข่าว</span></span>
+              <span class="badge-pill badge-draft">ร่าง 4</span>
+            </li>
+            <li class="status-row">
+              <span class="badge-pill badge-cat">อื่นๆ</span>
+              <span><span class="count-num">5</span> <span style="color:#aaa;font-size:12px;">ข่าว</span></span>
+              <span class="badge-pill badge-pub">เผยแพร่ 4</span>
+            </li>
+          </ul>
+
+          <div style="margin-top:1.25rem;">
+            <div class="card-title">ข่าวร่างที่รอเผยแพร่</div>
+            <ul class="status-list">
+              <li class="status-row">
+                <span style="font-size:13px;color:#1a1a1a;flex:1;">งานสัมมนาวิชาการประจำปี 2568</span>
+                <span class="badge-pill badge-draft">ฉบับร่าง</span>
+              </li>
+              <li class="status-row">
+                <span style="font-size:13px;color:#1a1a1a;flex:1;">ประกาศรับสมัครนักศึกษาใหม่</span>
+                <span class="badge-pill badge-draft">ฉบับร่าง</span>
+              </li>
+              <li class="status-row">
+                <span style="font-size:13px;color:#1a1a1a;flex:1;">ผลการประกวดนวัตกรรม</span>
+                <span class="badge-pill badge-draft">ฉบับร่าง</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // Show today date
+  var d = new Date();
+  var months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  document.getElementById('today-date').textContent = d.getDate() + ' ' + months[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+
+  var gridColor = 'rgba(0,0,0,0.06)';
+  var tickColor = '#aaa';
+
+  // Bar chart
+  new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.'],
+      datasets: [
+        { label: 'เผยแพร่แล้ว', data: [4,5,3,7,8,8], backgroundColor: '#378ADD', borderRadius: 4 },
+        { label: 'ฉบับร่าง',    data: [1,2,1,2,3,4], backgroundColor: '#EF9F27', borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 12, family: 'Sarabun' } } },
+        y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 12, family: 'Sarabun' }, stepSize: 2 } }
+      }
+    }
+  });
+
+  // Donut chart
+  new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['บริการ','ประกาศ','กิจกรรม','อื่นๆ'],
+      datasets: [{
+        data: [40, 30, 20, 10],
+        backgroundColor: ['#378ADD','#1D9E75','#EF9F27','#888780'],
+        borderWidth: 0,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  // logout
+  function logout() {
+    sessionStorage.removeItem('isAdmin');
+    sessionStorage.removeItem("adminUser");
+    window.location.href = '/admin-login.html';
+  }
+</script>
+</body>
+</html>

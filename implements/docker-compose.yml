@@ -1,0 +1,71 @@
+# ─────────────────────────────────────────────
+#  docker-compose.yml — News Project
+#  Run: docker compose up --build
+# ─────────────────────────────────────────────
+
+version: '3.9'
+
+services:
+
+  # ── 1. Node.js Backend ──────────────────────
+  backend:
+    build:
+      context: ./backend/src
+      dockerfile: Dockerfile
+    container_name: news_backend
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    volumes:
+      # Mount frontend so backend can serve HTML/assets
+      - ./frontend/src:/app/../../frontend/src:ro
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=news_database
+      - DB_USER=root
+      - DB_PASS=root
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── 2. MySQL Database ────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: news_database
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: news_database
+      MYSQL_USER: news_user
+      MYSQL_PASSWORD: news_pass
+    ports:
+      - "3308:3306"        # expose for local tools (e.g. DBeaver)
+    volumes:
+      - db_data:/var/lib/mysql                 # persist data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ── 3. phpMyAdmin (optional, for DB management) ──
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: news_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: news_user
+      PMA_PASSWORD: news_pass
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+    driver: local

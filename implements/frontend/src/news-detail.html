@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายละเอียดข่าว - สภานักศึกษา มหาวิทยาลัยมหิดล</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:    #1a3f8f;
+      --blue-dk: #0d2257;
+      --blue-lt: #e8eef9;
+      --white:   #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Sarabun', sans-serif; background: #f4f5f7; color: #1a1a1a; }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      background: var(--blue-dk); color: #fff;
+      padding: 6px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 13px;
+    }
+    .topbar a { color: #fff; text-decoration: none; }
+    .topbar a:hover { opacity: .75; }
+    .topbar .social { display: flex; gap: 12px; align-items: center; }
+    .topbar .social svg { width: 16px; height: 16px; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 32px;
+      background: var(--white);
+      border-bottom: 1px solid #e0e0e0;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-mark { font-size: 16px; font-weight: 700; color: var(--blue); }
+    .logo-sub { font-size: 11px; color: #666; line-height: 1.4; }
+    nav { display: flex; align-items: center; gap: 4px; }
+    nav a {
+      display: flex; align-items: center; gap: 5px;
+      padding: 7px 12px; font-size: 14px; color: #333;
+      text-decoration: none; border-radius: 8px;
+      transition: background .15s, color .15s;
+    }
+    nav a:hover { background: var(--blue-lt); color: var(--blue); }
+    nav a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb {
+      background: #fff; border-bottom: 0.5px solid #e0e0e0;
+      padding: 8px 32px; font-size: 13px; color: #888;
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .breadcrumb a { color: var(--blue); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* ── LAYOUT ── */
+    .page-wrap {
+      max-width: 860px; margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    /* ── ARTICLE ── */
+    .article {
+      background: #fff;
+      border: 0.5px solid #e0e0e0;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .article-hero {
+      width: 100%; max-height: 320px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .article-hero-placeholder {
+      width: 100%; height: 220px;
+      background: linear-gradient(135deg, var(--blue-dk) 0%, var(--blue) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 56px;
+    }
+
+    .article-body { padding: 1.75rem; }
+
+    .article-meta {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 1rem; flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-flex; padding: 3px 12px;
+      border-radius: 99px; font-size: 12px; font-weight: 500;
+      background: var(--blue-lt); color: var(--blue);
+    }
+
+    .article-date { font-size: 13px; color: #aaa; }
+
+    .article-title {
+      font-size: 20px; font-weight: 700;
+      color: var(--blue-dk); line-height: 1.45;
+      margin-bottom: 0.5rem;
+    }
+
+    .article-subtitle {
+      font-size: 15px; color: #555;
+      margin-bottom: 1.5rem; line-height: 1.6;
+    }
+
+    .article-divider {
+      border: none; border-top: 0.5px solid #e8e8e8;
+      margin: 1.25rem 0;
+    }
+
+    .article-content {
+      font-size: 15px; color: #333;
+      line-height: 1.9;
+    }
+
+    .article-content p { margin-bottom: 1rem; }
+    .article-content p:last-child { margin-bottom: 0; }
+
+    /* ── PDF DOWNLOAD ── */
+    .pdf-section {
+      margin-top: 1.75rem;
+      padding-top: 1.25rem;
+      border-top: 0.5px solid #e8e8e8;
+    }
+
+    .pdf-label {
+      font-size: 13px; font-weight: 600;
+      color: #555; margin-bottom: 10px;
+      text-transform: uppercase; letter-spacing: .05em;
+    }
+
+    .pdf-card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px;
+      background: #fff8f8;
+      border: 0.5px solid #f09595;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background .15s, box-shadow .15s;
+      margin-bottom: 8px;
+    }
+
+    .pdf-card:hover {
+      background: #fde8e8;
+      box-shadow: 0 3px 12px rgba(226,75,74,.12);
+    }
+
+    .pdf-icon {
+      width: 40px; height: 40px;
+      background: #E24B4A; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+
+    .pdf-info { flex: 1; min-width: 0; }
+    .pdf-name { font-size: 14px; font-weight: 600; color: #A32D2D; }
+    .pdf-size { font-size: 12px; color: #E24B4A; margin-top: 2px; }
+
+    .pdf-dl-btn {
+      display: flex; align-items: center; gap: 4px;
+      padding: 6px 12px;
+      background: #E24B4A; color: #fff;
+      border-radius: 7px; font-size: 12px; font-weight: 600;
+      font-family: 'Sarabun', sans-serif;
+      white-space: nowrap; flex-shrink: 0;
+    }
+
+    /* ── SHARE ── */
+    .share-section {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 0.5px solid #e8e8e8;
+    }
+    .share-label { font-size: 13px; color: #888; margin-bottom: 8px; }
+    .share-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .share-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 14px; border-radius: 7px;
+      font-size: 13px; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; border: none; text-decoration: none;
+      transition: opacity .15s;
+    }
+    .share-btn:hover { opacity: .85; }
+    .share-btn.fb { background: #1877F2; color: #fff; }
+    .share-btn.copy { background: #f0f0f0; color: #333; }
+    .copy-ok { font-size: 12px; color: #3B6D11; display: none; margin-left: 4px; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {}
+
+    .sidebar-card {
+      background: #fff;
+      border: 0.5px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-title {
+      font-size: 13px; font-weight: 600;
+      color: #555; margin-bottom: 12px;
+      text-transform: uppercase; letter-spacing: .05em;
+    }
+
+    /* Related news */
+    .related-item {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 8px 0; border-bottom: 0.5px solid #f0f0f0;
+      text-decoration: none; color: inherit;
+      transition: background .1s;
+    }
+    .related-item:last-child { border-bottom: none; }
+    .related-item:hover .related-title { color: var(--blue); }
+
+    .related-thumb {
+      width: 52px; height: 44px;
+      border-radius: 6px; object-fit: cover;
+      flex-shrink: 0; background: var(--blue-lt);
+    }
+
+    .related-thumb-ph {
+      width: 52px; height: 44px;
+      border-radius: 6px; background: var(--blue-lt);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+
+    .related-title {
+      font-size: 13px; font-weight: 500; color: #1a1a1a;
+      line-height: 1.4;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+      transition: color .15s;
+    }
+    .related-date { font-size: 11px; color: #aaa; margin-top: 3px; }
+
+    /* Info card */
+    .info-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 0.5px solid #f0f0f0; }
+    .info-row:last-child { border-bottom: none; }
+    .info-key { color: #888; }
+    .info-val { color: #1a1a1a; font-weight: 500; text-align: right; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--blue-dk); color: #ddd; text-align: center; padding: 20px; font-size: 13px; }
+
+    /* ── NOT FOUND ── */
+    .not-found { text-align: center; padding: 4rem 1rem; }
+    .not-found .big { font-size: 48px; margin-bottom: 12px; }
+    .not-found h2 { font-size: 20px; color: var(--blue-dk); margin-bottom: 8px; }
+    .not-found p { color: #888; font-size: 14px; }
+    .not-found a { color: var(--blue); text-decoration: none; }
+
+    @media (max-width: 700px) {
+      .page-wrap { grid-template-columns: 1fr; padding: 1rem 1rem 3rem; }
+      .article-title { font-size: 17px; }
+      .navbar { padding: 10px 16px; }
+      .breadcrumb { padding: 8px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="social">
+      <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="3"/>
+        </svg>
+      </a>
+      <a href="https://www.facebook.com/stucon.mahidol" aria-label="Facebook" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+    </div>
+    <a href="tel:075476519">โทรศัพท์ : 075-476-519</a>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <a href="/index.html" class="logo">
+      <span class="logo-mark">stucon.mahidol</span>
+      <span class="logo-sub">สภานักศึกษา<br>มหาวิทยาลัยมหิดล</span>
+    </a>
+    <nav>
+      <a href="/index.html">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        หน้าแรก
+      </a>
+      <a href="/news-history.html">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        ประวัติข่าว
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        บริการนักศึกษา
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        ติดต่อเรา
+      </a>
+    </nav>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb" id="breadcrumb">
+    <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:#888;fill:none;stroke-width:2;stroke-linecap:round;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <a href="/index.html">หน้าแรก</a>
+    <span>›</span>
+    <a href="/news-history.html">ประวัติข่าว</a>
+    <span>›</span>
+    <span id="breadcrumb-title">รายละเอียดข่าว</span>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="page-wrap" id="page-wrap">
+
+    <!-- ARTICLE -->
+    <main id="article-area">
+      <div class="not-found">
+        <div class="big">⏳</div>
+        <h2>กำลังโหลดข้อมูล...</h2>
+      </div>
+    </main>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar-area" style="display:none;">
+
+      <!-- Info -->
+      <div class="sidebar-card" id="info-card"></div>
+
+      <!-- Related -->
+      <div class="sidebar-card">
+        <div class="sidebar-title">ข่าวที่เกี่ยวข้อง</div>
+        <div id="related-list"></div>
+      </div>
+
+    </aside>
+  </div>
+
+  <footer>© 2568 สภานักศึกษา มหาวิทยาลัยมหิดล</footer>
+
+  <script>
+  // ===================================================
+  // NEWS DATABASE — เพิ่ม/แก้ข่าวได้ที่นี่
+  // ===================================================
+  var NEWS_DB = [
+    {
+      id: '1',
+      tag: 'แถลงการณ์',
+      title: 'แถลงการณ์ร่วมสภานักศึกษา มหาวิทยาลัยมหิดล และมหาวิทยาลัยธรรมศาสตร์ ศูนย์ลำปาง',
+      subtitle: 'เรื่อง ชะตากรรม ร่าง พรบ. อากาศสะอาด',
+      date: '12 พ.ค. 2568',
+      author: 'สภานักศึกษา มมหาวิทยาลัยมหิดล',
+      img: 'image/instagram/694713966_18091086695595564_3927902782432047810_n.webp',
+      content: [
+        'สภานักศึกษา มหาวิทยาลัยมหิดล และสภานักศึกษา มหาวิทยาลัยธรรมศาสตร์ ศูนย์ลำปาง ขอออกแถลงการณ์ร่วมเพื่อแสดงจุดยืนและความห่วงใยต่อสถานการณ์ร่าง พระราชบัญญัติอากาศสะอาด ที่กำลังอยู่ในกระบวนการพิจารณาของรัฐสภา',
+        'ทั้งสองสถาบันเห็นพ้องกันว่า คุณภาพอากาศที่สะอาดเป็นสิทธิขั้นพื้นฐานของประชาชนทุกคน โดยเฉพาะนักศึกษาและประชาชนในพื้นที่ภาคเหนือที่ได้รับผลกระทบจากปัญหาหมอกควันพิษอย่างรุนแรงในทุกปี',
+        'เราขอเรียกร้องให้รัฐสภาเร่งผ่านร่าง พรบ. อากาศสะอาด ที่มีเนื้อหาครอบคลุมและมีกลไกการบังคับใช้ที่มีประสิทธิภาพ เพื่อให้ประชาชนชาวไทยได้รับการคุ้มครองด้านสิทธิในอากาศสะอาดอย่างแท้จริง'
+      ],
+      pdfs: [
+        { name: 'แถลงการณ์ร่วม-อากาศสะอาด.pdf', size: '245 KB', url: 'docs/statement-clean-air.pdf' }
+      ],
+      relatedIds: ['2', '4']
+    },
+    {
+      id: '2',
+      tag: 'ประกาศ',
+      title: 'ประกาศสภานักศึกษามหาวิทยาลัยมหิดล',
+      subtitle: 'เรื่อง ประกาศรายชื่อคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
+      date: '7 พ.ค. 2568',
+      author: 'สภานักศึกษา มหาวิทยาลัยมหิดล',
+      img: 'image/instagram/659591458_18090415328595564_8426637387155158581_n.webp',
+      content: [
+        'ตามที่สภานักศึกษา มหาวิทยาลัยมหิดล ได้ดำเนินการสรรหาและคัดเลือกนักศึกษาเพื่อดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569 เสร็จสิ้นแล้วนั้น',
+        'สภานักศึกษาจึงขอประกาศรายชื่อผู้ที่ได้รับการรับรองให้ดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569 ตามเอกสารแนบ',
+        'ทั้งนี้ หากมีข้อสงสัยประการใด สามารถติดต่อสอบถามได้ที่สำนักงานสภานักศึกษา มหาวิทยาลัยมหิดล หรือช่องทางโซเชียลมีเดียของสภานักศึกษา'
+      ],
+      pdfs: [
+        { name: 'ประกาศรายชื่อคณะกรรมการสโมสร-2569.pdf', size: '380 KB', url: 'docs/committee-list-2569.pdf' },
+        { name: 'ภาคผนวก-รายชื่อ.pdf', size: '120 KB', url: 'docs/appendix-list-2569.pdf' }
+      ],
+      relatedIds: ['3', '5']
+    },
+    {
+      id: '3',
+      tag: 'ประกาศ',
+      title: 'ประกาศสภานักศึกษามหาวิทยาลัยมหิดล',
+      subtitle: 'เรื่อง ประกาศรายชื่อสมาชิกสภานักศึกษามหาวิทยาลัยมหิดล ประจำปีวาระ 2569 (ฉบับไม่เป็นทางการ)',
+      date: '23 เม.ย. 2568',
+      author: 'สภานักศึกษา มหาวิทยาลัยมหิดล',
+      img: 'image/instagram/671187312_18088653605595564_5971510714895221743_n.webp',
+      content: [
+        'สภานักศึกษา มหาวิทยาลัยมหิดล ขอประกาศรายชื่อสมาชิกสภานักศึกษามหาวิทยาลัยมหิดล ประจำปีวาระ 2569 (ฉบับไม่เป็นทางการ) เพื่อให้นักศึกษาและบุคลากรได้รับทราบ',
+        'รายชื่อดังกล่าวเป็นรายชื่อเบื้องต้นที่ได้รับการสรรหาตามกระบวนการที่กำหนด ก่อนที่จะมีการประกาศอย่างเป็นทางการต่อไป',
+        'หากมีการเปลี่ยนแปลงประการใด สภานักศึกษาจะแจ้งให้ทราบผ่านช่องทางการสื่อสารอย่างเป็นทางการของสภานักศึกษา'
+      ],
+      pdfs: [
+        { name: 'รายชื่อสมาชิกสภานักศึกษา-2569-ไม่เป็นทางการ.pdf', size: '210 KB', url: 'docs/members-unofficial-2569.pdf' }
+      ],
+      relatedIds: ['2', '4']
+    },
+    {
+      id: '4',
+      tag: 'แถลงการณ์',
+      title: 'แถลงการณ์ขอโทษ',
+      subtitle: 'กรณีความผิดพลาดในลำดับการรับรองรายชื่อนักศึกษาสรรหาเพื่อดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
+      date: '23 เม.ย. 2568',
+      author: 'สภานักศึกษา มหาวิทยาลัยมหิดล',
+      img: 'image/instagram/674395107_18088653500595564_8262444920406159664_n.webp',
+      content: [
+        'สภานักศึกษา มหาวิทยาลัยมหิดล ขอแสดงความรับผิดชอบและขอโทษต่อความผิดพลาดที่เกิดขึ้นในกระบวนการรับรองรายชื่อนักศึกษาสรรหาเพื่อดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
+        'ความผิดพลาดดังกล่าวเกิดจากความคลาดเคลื่อนในกระบวนการตรวจสอบลำดับรายชื่อ ซึ่งสภานักศึกษายืนยันว่าจะดำเนินการแก้ไขและปรับปรุงกระบวนการให้รัดกุมยิ่งขึ้นในอนาคต',
+        'สภานักศึกษาขอน้อมรับคำวิจารณ์และข้อเสนอแนะทุกประการ และขอให้คำมั่นว่าจะดำเนินการด้วยความโปร่งใส ตรวจสอบได้ และเป็นธรรมแก่นักศึกษาทุกคน'
+      ],
+      pdfs: [
+        { name: 'แถลงการณ์ขอโทษ-คณะกรรมการสโมสร.pdf', size: '185 KB', url: 'docs/apology-statement.pdf' }
+      ],
+      relatedIds: ['1', '3']
+    },
+    {
+      id: '5',
+      tag: 'ประกาศ',
+      title: 'นักศึกษามหิดลทุกคนเตรียมแอพ We Mahidol ให้พร้อม!',
+      subtitle: 'ลงมติรับรองรายชื่อนักศึกษาสรรหาเป็นคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
+      date: '20 เม.ย. 2568',
+      author: 'สภานักศึกษา มหาวิทยาลัยมหิดล',
+      img: 'image/instagram/670603463_18088192883595564_5219576456899627411_n.webp',
+      content: [
+        'สภานักศึกษา มหาวิทยาลัยมหิดล ขอเชิญชวนนักศึกษาทุกท่านร่วมลงมติรับรองรายชื่อนักศึกษาสรรหาเพื่อดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
+        'การลงมติจะดำเนินการผ่านแอพพลิเคชัน We Mahidol ในวันที่ 21-22 เมษายน 2568 ขอให้นักศึกษาทุกคนเตรียมแอพพลิเคชันให้พร้อมและใช้สิทธิ์ในการออกเสียงของตน',
+        'การมีส่วนร่วมของนักศึกษาทุกคนเป็นสิ่งสำคัญอย่างยิ่งต่อกระบวนการประชาธิปไตยภายในมหาวิทยาลัย สภานักศึกษาจึงขอเชิญชวนนักศึกษาทุกท่านใช้สิทธิ์ออกเสียงเพื่ออนาคตของประชาคมมหิดล'
+      ],
+      pdfs: [],
+      relatedIds: ['2', '3']
+    }
+  ];
+
+  // ===================================================
+  // RENDER
+  // ===================================================
+  function getNewsById(id) {
+    return NEWS_DB.find(function(n) { return n.id === id; });
+  }
+
+  function renderArticle() {
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get('id');
+    var news = id ? getNewsById(id) : null;
+
+    if (!news) {
+      document.getElementById('article-area').innerHTML =
+        '<div class="not-found"><div class="big">📭</div><h2>ไม่พบข่าวที่ต้องการ</h2>' +
+        '<p>ข่าวอาจถูกลบหรือ URL ไม่ถูกต้อง</p><br>' +
+        '<a href="/news-history.html">← กลับไปดูข่าวทั้งหมด</a></div>';
+      return;
+    }
+
+    // Breadcrumb
+    document.getElementById('breadcrumb-title').textContent =
+      news.title.length > 40 ? news.title.slice(0, 40) + '...' : news.title;
+    document.title = news.title + ' - สภานักศึกษา มหาวิทยาลัยมหิดล';
+
+    // Hero image
+    var heroHTML = news.img
+      ? '<img src="' + news.img + '" class="article-hero" alt="' + news.title + '">'
+      : '<div class="article-hero-placeholder">📰</div>';
+
+    // Content paragraphs
+    var contentHTML = news.content.map(function(p) {
+      return '<p>' + p + '</p>';
+    }).join('');
+
+    // PDF section
+    var pdfHTML = '';
+    if (news.pdfs && news.pdfs.length > 0) {
+      pdfHTML = '<div class="pdf-section"><div class="pdf-label">📎 เอกสารแนบ / ดาวน์โหลด</div>' +
+        news.pdfs.map(function(pdf) {
+          return '<a class="pdf-card" href="' + pdf.url + '" download aria-label="ดาวน์โหลด ' + pdf.name + '">' +
+            '<div class="pdf-icon">PDF</div>' +
+            '<div class="pdf-info"><div class="pdf-name">' + pdf.name + '</div><div class="pdf-size">' + pdf.size + '</div></div>' +
+            '<div class="pdf-dl-btn">⬇ ดาวน์โหลด</div>' +
+            '</a>';
+        }).join('') + '</div>';
+    }
+
+    // Share section
+    var shareURL = encodeURIComponent(window.location.href);
+    var shareTitle = encodeURIComponent(news.title);
+    var shareHTML = '<div class="share-section"><div class="share-label">แชร์ข่าวนี้</div>' +
+      '<div class="share-btns">' +
+      '<a class="share-btn fb" href="https://www.facebook.com/sharer/sharer.php?u=' + shareURL + '" target="_blank" rel="noopener">👍 แชร์ Facebook</a>' +
+      '<button class="share-btn copy" onclick="copyLink()">🔗 คัดลอกลิงก์ <span class="copy-ok" id="copy-ok">✓ คัดลอกแล้ว!</span></button>' +
+      '</div></div>';
+
+    document.getElementById('article-area').innerHTML =
+      '<div class="article">' +
+      heroHTML +
+      '<div class="article-body">' +
+      '<div class="article-meta"><span class="tag">' + news.tag + '</span><span class="article-date">' + news.date + '</span></div>' +
+      '<h1 class="article-title">' + news.title + '</h1>' +
+      '<div class="article-subtitle">' + news.subtitle + '</div>' +
+      '<hr class="article-divider">' +
+      '<div class="article-content">' + contentHTML + '</div>' +
+      pdfHTML +
+      shareHTML +
+      '</div></div>';
+
+    // Info card
+    document.getElementById('info-card').innerHTML =
+      '<div class="sidebar-title">ข้อมูลข่าว</div>' +
+      '<div class="info-row"><span class="info-key">วันที่</span><span class="info-val">' + news.date + '</span></div>' +
+      '<div class="info-row"><span class="info-key">หมวดหมู่</span><span class="info-val">' + news.tag + '</span></div>' +
+      '<div class="info-row"><span class="info-key">โดย</span><span class="info-val">' + news.author + '</span></div>' +
+      '<div class="info-row"><span class="info-key">เอกสารแนบ</span><span class="info-val">' + (news.pdfs ? news.pdfs.length : 0) + ' ไฟล์</span></div>';
+
+    // Related news
+    var relatedHTML = '';
+    if (news.relatedIds && news.relatedIds.length > 0) {
+      news.relatedIds.forEach(function(rid) {
+        var r = getNewsById(rid);
+        if (!r) return;
+        var thumb = r.img
+          ? '<img class="related-thumb" src="' + r.img + '" alt="">'
+          : '<div class="related-thumb-ph">📰</div>';
+        relatedHTML +=
+          '<a class="related-item" href="/news-detail.html?id=' + r.id + '">' +
+          thumb +
+          '<div><div class="related-title">' + r.title + '</div><div class="related-date">' + r.date + '</div></div>' +
+          '</a>';
+      });
+    } else {
+      relatedHTML = '<div style="font-size:13px;color:#aaa;">ไม่มีข่าวที่เกี่ยวข้อง</div>';
+    }
+    document.getElementById('related-list').innerHTML = relatedHTML;
+
+    document.getElementById('sidebar-area').style.display = 'block';
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href).then(function() {
+      var ok = document.getElementById('copy-ok');
+      if (ok) { ok.style.display = 'inline'; setTimeout(function() { ok.style.display = 'none'; }, 2000); }
+    });
+  }
+
+  renderArticle();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>คณะบัณฑิตวิยาลัย</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&family=Noto+Serif+Thai:wght@700;900&display=swap" rel="stylesheet" /> -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:      #1a3f8f;
+      --blue-dk:   #0d2257;
+      --blue-lt:   #e8eef8;
+      --blue-mid:  #2455b0;
+      --gold:      #c8a84b;
+      --gold-lt:   #f0d070;
+      --white:     #ffffff;
+      --gray-lt:   #f4f6fb;
+      --text:      #1a1a2e;
+    }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      color: var(--text);
+      background: var(--white);
+    }
+
+    /* ── TOP BAR ─────────────────────────────────── */
+    .topbar {
+      background: var(--blue-dk);
+      color: var(--white);
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 18px;
+      padding: 6px 32px;
+      font-size: 13px;
+    }
+
+    .topbar a { color: var(--white); text-decoration: none; }
+    .topbar a:hover { opacity: .75; }
+
+    .topbar .social { display: flex; gap: 12px; align-items: center;}
+    .topbar .social a { color: #fff; display: flex; align-items: center;}
+    .topbar .social svg { width: 18px; height: 18px; fill: currentColor; }
+
+    .topbar .phone { display: flex; align-items: center; gap: 6px; }
+    .topbar .phone svg { width: 16px; height: 16px; fill: currentColor; }
+
+    /* ── NAVBAR ──────────────────────────────────── */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 32px;
+      background: var(--white);
+      border-bottom: 1px solid #e0e0e0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    /* Colourful "SAB" text logo – CSS only */
+    .logo-mark {
+      font-size: 38px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #1a3f8f, #2196f3, #00bcd4, #1565c0, #0d2257);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .logo-sub {
+      font-size: 9px;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      line-height: 1.3;
+      max-width: 120px;
+    }
+
+    /* Nav menu */
+    nav { display: flex; gap: 4px; align-items: center; }
+
+    nav a {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--blue);
+      text-decoration: none;
+      transition: background .2s;
+    }
+
+    nav a:hover { background: var(--blue-lt); }
+    nav a svg { width: 15px; height: 15px; fill: currentColor; }
+
+    .dropdown { position: relative; }
+
+    .dropdown > a::after {
+      content: '▾';
+      font-size: 11px;
+      margin-left: 2px;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: var(--white);
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.1);
+      min-width: 180px;
+      overflow: hidden;
+      z-index: 200;
+    }
+
+    .dropdown:hover .dropdown-menu { display: block; }
+
+    .dropdown-menu a {
+      border-radius: 0;
+      padding: 10px 16px;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .dropdown-menu a:hover { background: var(--blue-lt); color: var(--blue); }
+
+    /* ── BREADCRUMB ──────────────────────────────── */
+    .breadcrumb {
+      padding: 8px 32px;
+      background: var(--gray-lt);
+      font-size: 13px;
+      border-bottom: 1px solid #d6dff0;
+    }
+
+    .breadcrumb a { color: var(--blue); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb svg { width: 14px; height: 14px; fill: currentColor; }
+
+    /* ── HERO ────────────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 520px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Placeholder background — replace src with real image */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('image/gradualfact.webp') center/cover no-repeat;
+      /* background: linear-gradient(135deg, #0d2257 0%, #1a3f8f 35%, #2455b0 65%, #1e88e5 100%); */
+      /* swap for: background: url('your-hero.jpg') center/cover no-repeat; */
+    }
+
+    /* Dark overlay so text is legible */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .38);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 0 24px;
+      animation: fadeUp .9s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-title-th {
+      font-family: 'Noto Serif Thai', serif;
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900;
+      line-height: 1.25;
+      /* Gold gradient similar to original */
+      background: linear-gradient(135deg, #f0d070, #c8a84b, #f5e890, #b8860b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      margin-bottom: 8px;
+    }
+
+    .hero-subtitle-th {
+      font-family: 'Noto Serif Thai', serif;
+      font-size: clamp(22px, 3.5vw, 40px);
+      font-weight: 700;
+      background: linear-gradient(135deg, #f0d070, #c8a84b, #f5e890);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 14px;
+    }
+
+    .hero-tagline {
+      color: rgba(255,255,255,.85);
+      font-size: clamp(13px, 1.8vw, 17px);
+      letter-spacing: .3px;
+    }
+
+    /* ── RESPONSIVE (basic) ──────────────────────── */
+    @media (max-width: 768px) {
+      .navbar { flex-wrap: wrap; gap: 12px; }
+      nav { flex-wrap: wrap; }
+      .topbar { font-size: 11px; padding: 6px 16px; }
+      .hero { height: 380px; }
+    }
+
+    /* service icons */
+    /* ── SERVICE ICONS ─────────────────────────── */
+    .services-section {
+      padding: 48px 32px 32px;
+      background: var(--white);
+    }
+ 
+    .services-grid {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+ 
+    .service-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 28px 24px;
+      border: 1px solid #e2e8f5;
+      border-radius: 14px;
+      width: 155px;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--white);
+      transition: box-shadow .25s, transform .25s;
+      cursor: pointer;
+    }
+ 
+    .service-card:hover {
+      box-shadow: 0 8px 28px rgba(26,63,143,.15);
+      transform: translateY(-4px);
+    }
+ 
+    .service-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+ 
+    .service-icon svg { width: 30px; height: 30px; }
+ 
+    .service-label {
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      color: var(--text);
+    }
+ 
+    /* ── NEWS SLIDER ───────────────────────────── */
+    .news-section {
+      padding: 32px 52px 48px;
+      background: var(--gray-lt);
+    }
+ 
+    .news-header {
+      margin-bottom: 20px;
+      text-align: left;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+ 
+    .news-badge {
+      display: inline-block;
+      background: var(--blue);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 20px;
+      letter-spacing: .3px;
+    }
+ 
+    .news-slider-wrapper {
+      position: relative;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+/* add news track-clip */
+    .news-track-clip {
+      overflow: hidden;
+      border-radius: 4px;
+    }
+ 
+    .news-track {
+      display: flex;
+      gap: 20px;
+      transition: transform .45s cubic-bezier(.4,0,.2,1);
+      will-change: transform;
+    }
+ 
+    .news-card {
+      min-width: calc((100% - 40px) / 3);
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(26,63,143,.08);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: box-shadow .2s;
+      
+    }
+ 
+    .news-card:hover { box-shadow: 0 8px 28px rgba(26,63,143,.16); }
+    a.news-card { text-decoration: none; color: inherit; display: block; cursor: pointer; }
+
+
+    .news-card-img {
+      height: 120px;
+      width: 100%;
+    }
+ 
+    .news-card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+ 
+    .news-tag {
+      display: inline-block;
+      background: var(--blue-lt);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      width: fit-content;
+    }
+ 
+    .news-card-body h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.45;
+    }
+ 
+    .news-card-body p {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+      
+    }
+ 
+    .news-date {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: auto;
+    }
+ 
+    /* Slider buttons */
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: var(--blue);
+      color: white;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(0,0,0,.15);
+      transition: background .2s, opacity .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+ 
+    .slider-btn:hover { background: var(--blue-dk); }
+    .slider-btn.prev { left: -18px; }
+    .slider-btn.next { right: -18px; }
+    .slider-btn:disabled { opacity: .35; cursor: default; }
+ 
+    /* Dots */
+    .slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+ 
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      border: none;
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+      padding: 0;
+    }
+ 
+    .dot.active {
+      background: var(--blue);
+      transform: scale(1.3);
+    }
+ 
+    @media (max-width: 768px) {
+      .news-card { min-width: calc(100% - 0px); }
+      .slider-btn.prev { left: 4px; }
+      .slider-btn.next { right: 4px; }
+      .services-grid { gap: 12px; }
+      .service-card { width: 130px; padding: 20px 14px; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ① TOP BAR -->
+  <div class="topbar">
+    <div class="social">
+      <!-- Facebook icon -->
+      <a href="https://www.facebook.com/stucon.mahidol/" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+      <!-- Instagram icon -->
+      <!-- <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a> -->
+
+      <!-- <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="3"/>
+        </svg>
+      </a> -->
+      <!-- Instagram icon -->
+      <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+        </svg>
+      </a>
+
+      <!-- Threads icon -->
+      <!-- <a href="https://www.threads.net/stucon.mahidol" target="_blank" aria-label="Threads">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12.5 2c-2.5 0-4.5 1-5.5 3-1 2-1 4 0 6 1 2 3 3 5 3s4-1 5-3c1-2 1-4 0-6-1-2-3-3-5-3z"/>
+          <path d="M16.5 8c0-2-1-4-3-5-2-1-4-1-6 0-2 1-3 3-3 5s1 4 3 5c2 1 4 1 6 0"/>
+          <circle cx="12" cy="12" r="1.5"/>
+        </svg>
+      </a> -->
+      <a href="https://www.threads.net/@stucon.mahidol" aria-label="Threads" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.5 7.5c-1.1-1.3-2.7-2-4.7-2-3.9 0-6.3
+           2.3-6.3 5.8 0 3.6 2.5 5.8 6.5 5.8 3.5 0 5.7-1.8 
+           5.7-4.5 0-2.2-1.4-3.7-4-4.2-.3-.1-.6-.1-.9-.1-.2-.7-.6-1.
+           2-1.1-1.6-.7-.6-1.7-.9-2.8-.9-2 0-3.4 1.1-3.4 
+           2.7h1.8c0-.7.7-1.2 1.6-1.2.5 0 .9.1 1.2.4.2.2.4.5.5.8-2.6.2-4.3 1.7-4.3 4 0 2.4 1.8 
+           3.9 4.5 3.9 1.5 0 2.7-.5 3.6-1.4.8-.8 1.2-1.9 1.2-3.1 0-.3 0-.7-.1-1 1.3.4 2 1.3 2 
+           2.5 0 1.8-1.6 3-4 3-3 0-4.8-1.6-4.8-4.3 0-2.6 1.7-4.3 4.5-4.3 1.5 0 2.7.5 3.5 1.5.7.8 1.1 1.9 1.1 3.1v.5H20v-.5c0-1.7-.5-3.2-1.5-4.3z"/>
+        </svg>
+      </a>
+
+      
+
+      <!-- TikTok icon -->
+      <a href="https://www.tiktok.com/@stucon.mahidol" target="_blank" aria-label="TikTok" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.59 6.69a4 4 0 0 1-3.77-4.25V2h-3.45v13.67a2.5 2.5 0 1 1-2.5-2.5c.33 0 .64.06.93.17V9.85a5.94 5.94 0 0 0-5.86 5.93 5.93 5.93 0 0 0 8.35 5.45 5.94 5.94 0 0 0 3.53-5.45V9.85c.66.47 1.42.84 2.22 1.08V7.62c-.33-.08-.66-.13-1-.13z"/>
+        </svg>
+      </a>
+
+      <!-- YouTube icon -->
+      <!-- <a href="https://www.youtube.com/@stucon.mahidol" target="_blank" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+          <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+        </svg>
+      </a> -->
+      <a href="https://www.youtube.com/@stucon.mahidol" aria-label="YouTube" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 
+          12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 
+          24 12a31.4 31.4 0 0 0-.5-5.8zM9.75 15.5v-7l6 3.5-6 3.5z"/>
+        </svg>
+      </a>
+
+      <!-- Phone icon
+      <a href="tel:075476519" class="phone">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.39 19a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 3.07 4.18 2 2 0 0 1 5.07 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L9.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        โทรศัพท์ : 075-476-519
+      </a> -->
+    </div>
+  </div>
+
+  <!-- ② NAVBAR -->
+  <header class="navbar">
+    <a href="/" class="logo">
+      <span class="logo-mark">stucon.mahidol</span>
+      <span class="logo-sub">สภานักศึกษา<br>มหาวิทยาลัยมหิดล</span>
+    </a>
+
+    <nav>
+      <!-- หน้าแรก -->
+      <a href="/">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        หน้าแรก
+      </a>
+
+      <a href="/admin-login.html">
+        <svg viewBox="0 0 24 24"><path d="M12 16v-6M8 12l4-4 4 4M20 12v8H4v-8"/><rect x="2" y="4" width="20" height="4" rx="1"/></svg>
+        เพิ่มข่าว
+      </a>
+      <!-- Add news to the navbar section -->
+      <!-- <a href="/upload.html">
+        <svg viewBox="0 0 24 24"><path d="M12 16v-6M8 12l4-4 4 4M20 12v8H4v-8"/><rect x="2" y="4" width="20" height="4" rx="1"/></svg>
+        เพิ่มข่าว
+      </a> -->
+
+      <!-- ข้อมูลทั่วไป (dropdown) -->
+      <div class="dropdown">
+        <a href="/news-history.html">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          ประวัติข่าว
+        </a>
+        <!-- <div class="dropdown-menu">
+          <a href="#">ประวัติความเป็นมา</a>
+          <a href="#">โครงสร้างองค์กร</a>
+          <a href="#">วิสัยทัศน์ / พันธกิจ</a>
+        </div> -->
+      </div>
+
+      
+
+      <!-- บริการนักศึกษา -->
+      <!-- <a href="#">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        บริการนักศึกษา
+      </a> -->
+
+      <!-- หน่วยงานในสังกัด (dropdown) -->
+      <!-- <div class="dropdown">
+        <a href="#">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          หน่วยงานในสังกัด
+        </a>
+        <div class="dropdown-menu">
+          <a href="#">หน่วยงาน 1</a>
+          <a href="#">หน่วยงาน 2</a>
+          <a href="#">หน่วยงาน 3</a>
+        </div>
+      </div> -->
+
+      <!-- ติดต่อเรา -->
+      <a href="#">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        ติดต่อเรา
+      </a>
+    </nav>
+  </header>
+
+  <!-- ③ BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="/">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      Home
+    </a>
+  </div>
+
+  <!-- ④ HERO SECTION -->
+  <section class="hero">
+    <!-- Replace .hero-bg with <img> or a CSS background-image for the real photo -->
+    <div class="hero-bg"></div>
+
+    <div class="hero-content">
+      <h1 class="hero-title-th">หัวใจของเรา คือนักศึกษา</h1>
+      <p class="hero-subtitle-th">เพราะทุกปัญหา สำคัญกับเรา</p>
+      <p class="hero-tagline">The Collegians Like an Ocean, The Ordeal Like an Aero.</p>
+    </div>
+  </section>
+
+  <!-- ⑤ MAIN CONTENT AREA (placeholder for future sections) -->
+  <!-- <main style="min-height: 200px; padding: 48px 32px; text-align: center; color: #999; font-size: 15px;">
+    <!-- Additional page sections go here -->
+    เนื้อหาเพิ่มเติม / Additional content sections
+  </main> -->
+
+
+<!-- ⑤ SERVICE ICONS -->
+  <main>
+    <section class="services-section">
+      <div class="services-grid">
+ 
+        <a href="#" class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <span class="service-label">e-Databases</span>
+        </a>
+ 
+        <a href="#" class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+          </div>
+          <span class="service-label">Self Renew</span>
+        </a>
+ 
+        <a href="#" class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <rect x="14" y="11" width="8" height="6" rx="1"/>
+              <path d="M22 14h-2"/>
+            </svg>
+          </div>
+          <span class="service-label">Book A RooM</span>
+        </a>
+ 
+        <a href="#" class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <span class="service-label">MU e-Lecture</span>
+        </a>
+ 
+        <a href="#" class="service-card">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <span class="service-label">Information</span>
+        </a>
+ 
+      </div>
+    </section>
+ 
+    <!-- ⑥ NEWS TICKER / SLIDE SECTION -->
+    <section class="news-section">
+      <div class="news-header">
+        <span class="news-badge">📰 ข่าวสาร / News</span>
+      </div>
+ 
+      <div class="news-slider-wrapper">
+        <div class="news-track-clip">
+        <div class="news-track" id="newsTrack">
+ 
+          <a class="news-card" href="/news-detail.html?id=1">
+            <!-- <div class="news-card-img" style="background:#dbeafe"></div> -->
+            <img src="image/instagram/694713966_18091086695595564_3927902782432047810_n.webp" 
+              class="news-card-img" 
+              style="object-fit:cover;width:100%;height:120px;" 
+              alt="" />
+            <div class="news-card-body">
+              <span class="news-tag">แถลงการณ์</span>
+              <h3>แถลงการณ์ร่วมสภานักศึกษา มหาวิทยาลัยมหิดล<br>และมหาวิทยาลัยธรรมศาสตร์ ศูนย์ลำปาง</h3>
+              <p>เรื่อง ชะตากรรม ร่าง พรบ. อากาศสะอาด</p>
+              <span class="news-date">12 พ.ค. 2568</span>
+            </div>
+          </a>
+ 
+          <a class="news-card" href="/news-detail.html?id=2">
+            <!-- <div class="news-card-img" style="background:#e0f2fe"></div> -->
+             <img src="image/instagram/659591458_18090415328595564_8426637387155158581_n.webp" 
+              class="news-card-img" 
+              style="object-fit:cover;width:100%;height:120px;" 
+              alt=""/>
+            <div class="news-card-body">
+              <span class="news-tag">ประกาศ</span>
+              <h3>ประกาศสภานักศึกษามหาวิทยาลัยมหิดล</h3>
+              <p>เรื่อง ประกาศรายชื่อคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล<br>ประจำปีการศึกษา 2569</p>
+              <span class="news-date">7 พ.ค. 2568</span>
+            </div>
+          </a>
+ 
+          <a class="news-card" href="/news-detail.html?id=3">
+            <!-- <div class="news-card-img" style="background:#ede9fe"></div> -->
+            <img src="image/instagram/671187312_18088653605595564_5971510714895221743_n.webp" 
+            class="news-card-img"
+            style="object-fit: cover;width: 100%;height: 120px;"
+            alt="">
+            <div class="news-card-body">
+              <span class="news-tag">ประกาศ</span>
+              <h3>ประกาศสภานักศึกษามหาวิทยาลัยมหิดล</h3>
+              <p>เรื่อง ประกาศรายชื่อสมาชิกสภานักศึกษามหาวิทยาลัยมหิดล<br>ประจำปีวาระ 2569 (ฉบับไม่เป็นทางการ)</p>
+              <span class="news-date">23 ม.ย. 2568</span>
+            </div>
+          </a>
+ 
+          <a class="news-card" href="/news-detail.html?id=4">
+            <!-- <div class="news-card-img" style="background:#dcfce7"></div> -->
+            <img src="image/instagram/674395107_18088653500595564_8262444920406159664_n.webp"
+            class="news-card-img"
+            style="object-fit: cover;width: 100%;height: 120px;"
+            alt="">
+            <div class="news-card-body">
+              <span class="news-tag">แถลงการณ์</span>
+              <h3>แถลงการณ์ขอโทษ</h3>
+              <p>กรณีความผิดพลาดในลำดับการรับรองรายชื่อนักศึกษาสรรหา<br>เพื่อดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล<br>
+                ประจำปีการศึกษา 2569</p>
+              <span class="news-date">23 ม.ย. 2568</span>
+            </div>
+          </a>
+ 
+          <a class="news-card" href="/news-detail.html?id=5">
+            <!-- <div class="news-card-img" style="background:#fef9c3"></div> -->
+            <img src="image/instagram/670603463_18088192883595564_5219576456899627411_n.webp"
+            class="news-card-img"
+            style="object-fit: cover;width: 100%;height: 120px;"
+            alt=""> 
+            <div class="news-card-body">
+              <span class="news-tag">ประกาศ</span>
+              <h3>นักศึกษามหิดลทุกคนเตรียมแอพ We Mahidol ให้พร้อม!</h3>
+              <p>ลงมติรับรองรายชื่อนักศึกษาสรรหาเป็น<br>คณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล<br>
+                ประจำปีการศึกษา 2569 วันที่ 21 - 22 เมษายน 2569 นี้<br>
+                มาร่วมใช้สิทธิในการลงมติรับรองร่วมกันเพื่ออนาคตของประชาคมมหิดล</p>
+              <span class="news-date">20 เม.ย. 2568</span>
+            </div>
+          </a>
+        
+        </div><!-- /news-track -->
+        </div><!--/news-track-clip -->
+
+        <button class="slider-btn prev" id="prevBtn" aria-label="Previous">&#8249;</button>
+        <button class="slider-btn next" id="nextBtn" aria-label="Next">&#8250;</button>
+      </div>
+ 
+      <!-- Dots -->
+      <div class="slider-dots" id="sliderDots"></div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+        const track = document.getElementById('newsTrack');
+        const cards = track.querySelectorAll('.news-card');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const dotsEl = document.getElementById('sliderDots');
+        const visibleCount = () => window.innerWidth <= 768 ? 1 : 3;
+        let current = 0;
+
+        // Build dots
+        const totalSlides = () => cards.length - visibleCount() + 1;
+        function buildDots() {
+            dotsEl.innerHTML = '';
+            for (let i = 0; i < totalSlides(); i++) {
+                const d = document.createElement('button');
+                d.className = 'dot' + (i === current ? ' active' : '');
+                d.setAttribute('aria-label', `Slide ${i+1}`);
+                d.addEventListener('click', () => goTo(i));
+                dotsEl.appendChild(d);
+            }
+        }
+
+        function goTo(index) {
+            current = Math.max(0, Math.min(index, totalSlides()-1));
+            const cardWidth = cards[0].getBoundingClientRect().width;
+            const gap = 20;
+            track.style.transform = `translateX(-${current * (cardWidth + gap)}px)`;
+            prevBtn.disabled = current === 0;
+            nextBtn.disabled = current >= totalSlides() - 1;
+            dotsEl.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+        }
+
+
+        prevBtn.addEventListener('click', () => goTo(current - 1));
+        nextBtn.addEventListener('click', () => goTo(current + 1));
+
+        //Auto-play right -> left every 3.5 seconds
+        let auto = setInterval(() => {
+            goTo(current >= totalSlides() - 1 ? 0 : current + 1);
+
+        
+        }, 3500);
+
+
+        track.parentElement.addEventListener('mouseenter', () => clearInterval(auto));
+        track.parentElement.addEventListener('mouseleave', () => {
+            auto = setInterval(() => {
+                goTo(current >= totalSlides() - 1 ? 0 : current + 1);
+
+            }, 3500);
+        });
+
+        window.addEventListener('resize', () => { buildDots(); goTo(0); });
+
+        buildDots();
+        goTo(0);
+    })();
+  </script>
+
+
+  <!-- ⑥ FOOTER (placeholder) -->
+  <footer style="background: var(--blue-dk); color: #ddd; text-align: center; padding: 20px; font-size: 13px;">
+    © 2568 สภานักศึกษา มหาวิทยาลัยมหิดล · โทรศัพท์ 075-476-519
+  </footer>
+
+</body>
+</html>
