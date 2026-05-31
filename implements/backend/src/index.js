@@ -20,6 +20,13 @@ const mimeTypes = {
   '.pdf':  'application/pdf',
 };
 
+const routeMap = {
+  '/':             '/index.html',
+  '/upload':       '/upload.html',
+  '/dashboard':    '/dashboard.html',
+  '/admin-login':  '/admin-login.html',
+};
+
 
 
 
@@ -27,7 +34,9 @@ const mimeTypes = {
 const server = http.createServer((req, res) => {
   const urlPath = req.url.split('?')[0];
   // 1. DYNAMIC PATH: If request is "/" use "/index.html", otherwise use what the browser asked for (like "/image/gradualfact.webp")
-  const reqUrl = urlPath === '/' ? '/index.html' : urlPath;
+  // const reqUrl = urlPath === '/' ? '/index.html' : urlPath;
+  const reqUrl = routeMap[urlPath] || urlPath;
+
   
   // 2. Combine it dynamically so it finds the correct file
   // const filepath = path.join(__dirname, '..', '..', 'frontend', 'src', reqUrl);
@@ -62,9 +71,11 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(3002, '0.0.0.0', () => {
+  console.log('Serving frontend from:', FRONTEND_SRC); 
   console.log('Server running at http://0.0.0.0:3002');
   console.log('Backend is running');
-
+  console.log('Path exists:', fs.existsSync(FRONTEND_SRC));
+  console.log('Files:', fs.readdirSync(FRONTEND_SRC));
   console.log('/                 --> index.html (mainpage)');
   console.log('/upload           --> upload.html (upload)');
   console.log('/admin-login.html --> admin-login.html (admin-login)');
