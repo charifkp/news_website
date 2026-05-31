@@ -75,7 +75,6 @@ server.listen(3002, '0.0.0.0', () => {
   console.log('Server running at http://0.0.0.0:3002');
   console.log('Backend is running');
   console.log('Path exists:', fs.existsSync(FRONTEND_SRC));
-  console.log('Files:', fs.readdirSync(FRONTEND_SRC));
   console.log('/                 --> index.html (mainpage)');
   console.log('/upload           --> upload.html (upload)');
   console.log('/admin-login.html --> admin-login.html (admin-login)');
