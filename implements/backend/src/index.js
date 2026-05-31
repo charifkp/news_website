@@ -34,8 +34,8 @@ const routeMap = {
 const server = http.createServer((req, res) => {
   const urlPath = req.url.split('?')[0];
   // 1. DYNAMIC PATH: If request is "/" use "/index.html", otherwise use what the browser asked for (like "/image/gradualfact.webp")
-  // const reqUrl = urlPath === '/' ? '/index.html' : urlPath;
-  const reqUrl = routeMap[urlPath] || urlPath;
+  const reqUrl = urlPath === '/' ? '/index.html' : urlPath;
+  // const reqUrl = routeMap[urlPath] || urlPath;
 
   
   // 2. Combine it dynamically so it finds the correct file
