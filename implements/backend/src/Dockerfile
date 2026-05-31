@@ -19,7 +19,7 @@ RUN npm install --omit=dev
 # COPY . .
 
 # Copy frontend into the container
-COPY ../../frontend/src ./frontend/src
+COPY frontend/src/ ./frontend/src
 # Expose the port the server listens on
 EXPOSE 3002
  
