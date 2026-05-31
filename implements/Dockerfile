@@ -10,7 +10,8 @@ FROM node:20-alpine
 WORKDIR /app
  
 # Copy package files first (layer caching)
-COPY package*.json ./
+# COPY package*.json ./
+COPY backend/src/package*.json ./
  
 # Install dependencies
 RUN npm install --omit=dev
@@ -26,3 +27,5 @@ EXPOSE 3002
  
 # Start the server
 CMD ["node", "index.js"]
+
+
