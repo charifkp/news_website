@@ -62,7 +62,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(3002, '0.0.0.0', () => {
-  console.log('Server running at http://127.0.0.1:3002');
+  console.log('Server running at http://0.0.0.0:3002');
   console.log('Backend is running');
 
   console.log('/                 --> index.html (mainpage)');
