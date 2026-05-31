@@ -39,8 +39,8 @@ const server = http.createServer((req, res) => {
 
   
   // 2. Combine it dynamically so it finds the correct file
-  // const filepath = path.join(__dirname, '..', '..', 'frontend', 'src', reqUrl);
-  let filepath = path.join(FRONTEND_SRC, reqUrl);
+  const filepath = path.join(__dirname, '..', '..', 'frontend', 'src', reqUrl);
+  // let filepath = path.join(FRONTEND_SRC, reqUrl);
   
 
 
