@@ -16,7 +16,7 @@ COPY package*.json ./
 RUN npm install --omit=dev
  
 # Copy backend source
-# COPY . .
+COPY backend/src/ .
 
 # Copy frontend into the container 
 COPY ../../frontend/src ./frontend/src
