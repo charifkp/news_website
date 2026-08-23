@@ -18,7 +18,8 @@ services:
       - "3002:3002"
     volumes:
       # Mount frontend so backend can serve HTML/assets
-      - ./frontend/src:/app/../../frontend/src:ro
+      # - ./frontend/src:/app/../../frontend/src:ro
+      - ./frontend/src:/app/frontend_src
     environment:
       - NODE_ENV=production
       - DB_HOST=db
@@ -68,4 +69,6 @@ services:
 
 volumes:
   db_data:
+    driver: local
+  uploads_data:       # ← named volume สำหรับเก็บไฟล์ที่ upload
     driver: local
