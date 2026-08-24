@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <script>
+    if (sessionStorage.getItem("isAdmin") !== "true") {
+      window.location.href = "/admin-login.html";
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - ตั้งค่า</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="/api.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: #f4f5f7;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    .app { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 220px;
+      background: #0C447C;
+      color: #fff;
+      padding: 1.5rem 0;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-logo {
+      font-size: 15px;
+      font-weight: 600;
+      padding: 0 1.25rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 1rem;
+    }
+    .sidebar-logo span { font-size: 11px; font-weight: 400; opacity: 0.6; display: block; margin-top: 2px; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 1.25rem;
+      font-size: 14px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: background 0.15s, opacity 0.15s;
+      text-decoration: none;
+      color: #fff;
+    }
+    .nav-item.active { background: rgba(255,255,255,0.12); opacity: 1; font-weight: 500; }
+    .nav-item:hover { background: rgba(255,255,255,0.08); opacity: 1; }
+    .nav-icon { font-size: 16px; }
+
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    .topbar {
+      background: #fff;
+      border-bottom: 0.5px solid #e0e0e0;
+      padding: 0 1.5rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .topbar-title { font-size: 16px; font-weight: 600; }
+
+    .content { padding: 1.5rem; overflow-y: auto; flex: 1; }
+
+    .settings-wrap { max-width: 680px; }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    .set-section {
+      background: #fff;
+      border: 0.5px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .set-section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .set-section-desc { font-size: 13px; color: #999; margin-bottom: 1.25rem; }
+
+    .set-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-top: 0.5px solid #f0f0f0;
+      gap: 12px;
+    }
+    .set-row:first-of-type { border-top: none; padding-top: 0; }
+
+    .set-label { font-size: 14px; color: #1a1a1a; }
+    .set-sub { font-size: 12px; color: #999; margin-top: 2px; }
+
+    .set-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+    .set-field label { font-size: 13px; color: #666; }
+
+    .set-field input {
+      font-size: 14px;
+      font-family: 'Sarabun', sans-serif;
+      padding: 8px 12px;
+      border: 0.5px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .set-field input:focus { border-color: #378ADD; box-shadow: 0 0 0 3px rgba(55,138,221,0.12); }
+    .set-field input:disabled { background: #f4f5f7; color: #999; cursor: not-allowed; }
+
+    .avatar-circle {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: #E6F1FB;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 600; color: #0C447C;
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      padding: 8px 18px;
+      font-size: 14px;
+      font-family: 'Sarabun', sans-serif;
+      border: none;
+      border-radius: 8px;
+      background: #185FA5;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: #0C447C; }
+    .btn-primary:disabled { background: #aaa; cursor: not-allowed; }
+
+    .btn-secondary {
+      padding: 7px 14px;
+      font-size: 13px;
+      font-family: 'Sarabun', sans-serif;
+      border: 0.5px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      color: #555;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-secondary:hover { background: #f5f5f5; }
+
+    .btn-danger {
+      padding: 7px 14px;
+      font-size: 13px;
+      font-family: 'Sarabun', sans-serif;
+      border: 0.5px solid #f09595;
+      border-radius: 8px;
+      background: #fff;
+      color: #E24B4A;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-danger:hover { background: #fde8e8; }
+
+    .badge-active {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 99px;
+      background: #eaf3de;
+      color: #27500A;
+      white-space: nowrap;
+    }
+
+    .set-danger { border-color: #f09595; background: #fff8f8; }
+    .set-danger .set-section-title { color: #A32D2D; }
+
+    .toast {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #eaf3de;
+      border: 0.5px solid #97C459;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #27500A;
+      z-index: 999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .toast.error { background: #fde8e8; border-color: #f09595; color: #A32D2D; }
+
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      width: 360px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+    .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.25rem; }
+
+    @media (max-width: 700px) {
+      .sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      📰 News Admin
+      <span>ระบบจัดการข่าว</span>
+    </div>
+
+    <a class="nav-item" href="/index.html">
+      <span class="nav-icon">🏠</span> หน้าหลัก
+    </a>
+
+    <a class="nav-item" href="/upload.html">
+      <span class="nav-icon">📋</span> จัดการข่าว
+    </a>
+
+    <a class="nav-item" href="/dashboard.html">
+      <span class="nav-icon">📊</span> Dashboard
+    </a>
+
+    <a class="nav-item active" href="/settings.html">
+      <span class="nav-icon">⚙️</span> ตั้งค่า
+    </a>
+
+    <a class="nav-item" href="#" onclick="logout()" style="margin-top:auto;">
+      <span class="nav-icon">🚪</span> ออกจากระบบ
+    </a>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">ตั้งค่า</div>
+    </div>
+
+    <div class="content">
+      <div class="toast" id="toast"></div>
+
+      <div class="settings-wrap">
+
+        <div class="section-label">บัญชีผู้ใช้</div>
+
+        <div class="set-section">
+          <div class="set-section-title">👤 โปรไฟล์ผู้ดูแลระบบ</div>
+          <div class="set-section-desc">ข้อมูลบัญชีที่ใช้เข้าสู่ระบบ</div>
+
+          <div style="display:flex; gap:14px; align-items:center; margin-bottom:1.25rem;">
+            <div class="avatar-circle" id="avatar-initial">A</div>
+            <div>
+              <div style="font-size:14px; font-weight:600; color:#1a1a1a;" id="profile-name-display">Administrator</div>
+              <div class="set-sub" id="profile-created">—</div>
+            </div>
+          </div>
+
+          <div class="set-field">
+            <label for="display-name">ชื่อที่แสดง</label>
+            <input id="display-name" type="text" placeholder="ชื่อที่แสดงผล">
+          </div>
+          <div class="set-field">
+            <label for="username">ชื่อผู้ใช้</label>
+            <input id="username" type="text" disabled>
+          </div>
+          <button class="btn-primary" id="btn-save-profile" onclick="saveProfile()">บันทึกการเปลี่ยนแปลง</button>
+        </div>
+
+        <div class="set-section">
+          <div class="set-section-title">🔒 เปลี่ยนรหัสผ่าน</div>
+          <div class="set-section-desc">ใช้รหัสผ่านที่คาดเดายาก อย่างน้อย 8 ตัวอักษร</div>
+
+          <div class="set-field">
+            <label for="cur-pw">รหัสผ่านปัจจุบัน</label>
+            <input id="cur-pw" type="password" placeholder="กรอกรหัสผ่านปัจจุบัน">
+          </div>
+          <div class="set-field">
+            <label for="new-pw">รหัสผ่านใหม่</label>
+            <input id="new-pw" type="password" placeholder="อย่างน้อย 8 ตัวอักษร">
+          </div>
+          <div class="set-field">
+            <label for="confirm-pw">ยืนยันรหัสผ่านใหม่</label>
+            <input id="confirm-pw" type="password" placeholder="กรอกรหัสผ่านใหม่อีกครั้ง">
+          </div>
+          <button class="btn-primary" id="btn-save-password" onclick="changePassword()">เปลี่ยนรหัสผ่าน</button>
+        </div>
+
+        <div class="section-label">ทีมผู้ดูแล</div>
+
+        <div class="set-section">
+          <div class="set-section-title">👥 ผู้ดูแลระบบ</div>
+          <div class="set-section-desc">บัญชีที่เข้าถึงระบบจัดการข่าวได้</div>
+
+          <div id="admin-list"></div>
+
+          <button class="btn-secondary" style="margin-top:1rem;" onclick="openAddAdminModal()">+ เพิ่มผู้ดูแลระบบ</button>
+        </div>
+
+        <div class="section-label">ความเสี่ยงสูง</div>
+
+        <div class="set-section set-danger">
+          <div class="set-section-title">⚠️ โซนอันตราย</div>
+          <div class="set-section-desc">การดำเนินการเหล่านี้ไม่สามารถย้อนกลับได้</div>
+
+          <div class="set-row">
+            <div>
+              <div class="set-label">ออกจากระบบทุกอุปกรณ์</div>
+              <div class="set-sub">ล้าง session บนเบราว์เซอร์นี้ และต้องเข้าสู่ระบบใหม่</div>
+            </div>
+            <button class="btn-danger" onclick="logoutAll()">ออกจากระบบ</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="add-admin-modal">
+  <div class="modal">
+    <div class="modal-title">เพิ่มผู้ดูแลระบบใหม่</div>
+    <div class="set-field">
+      <label for="new-admin-username">ชื่อผู้ใช้</label>
+      <input id="new-admin-username" type="text" placeholder="username">
+    </div>
+    <div class="set-field">
+      <label for="new-admin-name">ชื่อที่แสดง</label>
+      <input id="new-admin-name" type="text" placeholder="ชื่อ-นามสกุล">
+    </div>
+    <div class="set-field">
+      <label for="new-admin-password">รหัสผ่าน</label>
+      <input id="new-admin-password" type="password" placeholder="อย่างน้อย 8 ตัวอักษร">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeAddAdminModal()">ยกเลิก</button>
+      <button class="btn-primary" onclick="createAdmin()">เพิ่มผู้ใช้</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    loadProfile();
+    loadAdminList();
+  });
+
+  function showToast(msg, isError) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast' + (isError ? ' error' : '');
+    t.style.display = 'flex';
+    setTimeout(function () { t.style.display = 'none'; }, 3000);
+  }
+
+  async function loadProfile() {
+    try {
+      var admin = await fetch('/api/admin/profile').then(function (r) { return r.json(); });
+      if (admin.error) throw new Error(admin.error);
+
+      document.getElementById('display-name').value = admin.display_name || '';
+      document.getElementById('username').value = admin.username || '';
+      document.getElementById('profile-name-display').textContent = admin.display_name || admin.username;
+      document.getElementById('avatar-initial').textContent = (admin.display_name || admin.username || 'A').charAt(0).toUpperCase();
+
+      if (admin.created_at) {
+        var d = new Date(admin.created_at);
+        var months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+        document.getElementById('profile-created').textContent =
+          'สร้างบัญชีเมื่อ ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+      }
+    } catch (e) {
+      showToast('โหลดข้อมูลโปรไฟล์ไม่สำเร็จ: ' + e.message, true);
+    }
+  }
+
+  async function saveProfile() {
+    var displayName = document.getElementById('display-name').value.trim();
+    if (!displayName) { showToast('กรุณากรอกชื่อที่แสดง', true); return; }
+
+    var btn = document.getElementById('btn-save-profile');
+    btn.disabled = true;
+    btn.textContent = 'กำลังบันทึก...';
+
+    try {
+      var res = await fetch('/api/admin/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ display_name: displayName }),
+      });
+      var result = await res.json();
+      if (result.error) throw new Error(result.error);
+
+      document.getElementById('profile-name-display').textContent = displayName;
+      document.getElementById('avatar-initial').textContent = displayName.charAt(0).toUpperCase();
+      showToast('บันทึกโปรไฟล์เรียบร้อยแล้ว ✓');
+    } catch (e) {
+      showToast('เกิดข้อผิดพลาด: ' + e.message, true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'บันทึกการเปลี่ยนแปลง';
+    }
+  }
+
+  async function changePassword() {
+    var curPw = document.getElementById('cur-pw').value;
+    var newPw = document.getElementById('new-pw').value;
+    var confirmPw = document.getElementById('confirm-pw').value;
+
+    if (!curPw || !newPw || !confirmPw) {
+      showToast('กรุณากรอกข้อมูลให้ครบทุกช่อง', true);
+      return;
+    }
+    if (newPw.length < 8) {
+      showToast('รหัสผ่านใหม่ต้องมีอย่างน้อย 8 ตัวอักษร', true);
+      return;
+    }
+    if (newPw !== confirmPw) {
+      showToast('รหัสผ่านใหม่และยืนยันรหัสผ่านไม่ตรงกัน', true);
+      return;
+    }
+
+    var btn = document.getElementById('btn-save-password');
+    btn.disabled = true;
+    btn.textContent = 'กำลังเปลี่ยน...';
+
+    try {
+      var res = await fetch('/api/admin/password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ current_password: curPw, new_password: newPw }),
+      });
+      var result = await res.json();
+      if (result.error) throw new Error(result.error);
+
+      document.getElementById('cur-pw').value = '';
+      document.getElementById('new-pw').value = '';
+      document.getElementById('confirm-pw').value = '';
+      showToast('เปลี่ยนรหัสผ่านเรียบร้อยแล้ว ✓');
+    } catch (e) {
+      showToast('เกิดข้อผิดพลาด: ' + e.message, true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'เปลี่ยนรหัสผ่าน';
+    }
+  }
+
+  async function loadAdminList() {
+    var listEl = document.getElementById('admin-list');
+    try {
+      var admins = await fetch('/api/admin/list').then(function (r) { return r.json(); });
+      if (admins.error) throw new Error(admins.error);
+
+      if (admins.length === 0) {
+        listEl.innerHTML = '<div class="set-sub">ยังไม่มีผู้ดูแลระบบ</div>';
+        return;
+      }
+
+      listEl.innerHTML = admins.map(function (a) {
+        return '<div class="set-row">' +
+          '<div>' +
+          '<div class="set-label">' + esc(a.display_name) + '</div>' +
+          '<div class="set-sub">' + esc(a.username) + (a.id === 1 ? ' · เจ้าของระบบ' : '') + '</div>' +
+          '</div>' +
+          '<span class="badge-active">' + (a.is_active ? 'ใช้งานอยู่' : 'ปิดใช้งาน') + '</span>' +
+          '</div>';
+      }).join('');
+    } catch (e) {
+      listEl.innerHTML = '<div class="set-sub">โหลดรายชื่อผู้ดูแลไม่สำเร็จ</div>';
+    }
+  }
+
+  function esc(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function openAddAdminModal() {
+    document.getElementById('new-admin-username').value = '';
+    document.getElementById('new-admin-name').value = '';
+    document.getElementById('new-admin-password').value = '';
+    document.getElementById('add-admin-modal').style.display = 'flex';
+  }
+
+  function closeAddAdminModal() {
+    document.getElementById('add-admin-modal').style.display = 'none';
+  }
+
+  async function createAdmin() {
+    var username = document.getElementById('new-admin-username').value.trim();
+    var displayName = document.getElementById('new-admin-name').value.trim();
+    var password = document.getElementById('new-admin-password').value;
+
+    if (!username || !password) {
+      showToast('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน', true);
+      return;
+    }
+    if (password.length < 8) {
+      showToast('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร', true);
+      return;
+    }
+
+    try {
+      var res = await fetch('/api/admin/list', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: username, display_name: displayName, password: password }),
+      });
+      var result = await res.json();
+      if (result.error) throw new Error(result.error);
+
+      closeAddAdminModal();
+      await loadAdminList();
+      showToast('เพิ่มผู้ดูแลระบบเรียบร้อยแล้ว ✓');
+    } catch (e) {
+      showToast('เกิดข้อผิดพลาด: ' + e.message, true);
+    }
+  }
+
+  document.getElementById('add-admin-modal').addEventListener('click', function (e) {
+    if (e.target === this) closeAddAdminModal();
+  });
+
+  function logoutAll() {
+    sessionStorage.removeItem('isAdmin');
+    sessionStorage.removeItem('adminUser');
+    window.location.href = '/admin-login.html';
+  }
+
+  function logout() {
+    sessionStorage.removeItem('isAdmin');
+    sessionStorage.removeItem('adminUser');
+    window.location.href = '/admin-login.html';
+  }
+</script>
+</body>
+</html>
