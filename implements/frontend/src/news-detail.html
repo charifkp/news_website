@@ -29,20 +29,55 @@
 
     /* ── NAVBAR ── */
     .navbar {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 10px 32px;
-      background: var(--white);
-      border-bottom: 1px solid #e0e0e0;
-      position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      background: var(--blue-dk);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
     }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-mark { font-size: 16px; font-weight: 700; color: var(--blue); }
-    .logo-sub { font-size: 11px; color: #666; line-height: 1.4; }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .logo-img {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .logo-text-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+    }
+    .logo-mark { 
+      font-size: 16px; 
+      font-weight: 700; 
+      color: #fff; 
+      line-height: 1.2;
+      letter-spacing: 0;
+      background: none;
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: #fff;
+      background-clip: unset;
+    }
+
+    .logo-sub { 
+      font-size: 12px; 
+      color: rgba(255,255,255,0.65); 
+      line-height: 1.4;
+      white-space: nowrap;
+      max-width: 200px; 
+    }
+    /* nav */
     nav { display: flex; align-items: center; gap: 4px; }
     nav a {
       display: flex; align-items: center; gap: 5px;
-      padding: 7px 12px; font-size: 14px; color: #333;
+      padding: 7px 12px; font-size: 14px; color: rgba(255,255,255,0.8);
       text-decoration: none; border-radius: 8px;
       transition: background .15s, color .15s;
     }
@@ -76,10 +111,28 @@
       overflow: hidden;
     }
 
+    .article-hero-wrap {
+      position: relative;
+      width: 100%;
+      height: 460px;
+      overflow: hidden;
+      /* background: #1a1a1a; */
+    }
+
+    .article-hero-bg {
+      position: absolute;
+      inset: -20px;
+      background-size: cover;
+      background-position: center;
+      filter: blur(24px) brightness(0.65) saturate(1.1);
+      transform: scale(1.1);
+    }
+
     .article-hero {
-      width: 100%; max-height: 320px;
-      object-fit: cover;
+      width: 100%; max-height: 460px;
+      object-fit: contain;
       display: block;
+      z-index: 1;
     }
 
     .article-hero-placeholder {
@@ -89,6 +142,101 @@
       font-size: 56px;
     }
 
+
+    /* ── IMAGE SLIDER ── */
+    .article-slider {
+      position: relative;
+      width: 100%;
+      height: 460px;          /* fixed height — same as old single-image hero */
+      overflow: hidden;
+      /* background: #1a1a1a; */
+    }
+
+    .slider-track {
+      display: flex;
+      height: 100%;
+      transition: transform .35s ease;
+      will-change: transform;
+    }
+
+    .slider-slide {
+      width: 100%;
+      height: 100%;            /* inherit the fixed 320px from .article-slider */
+      flex-shrink: 0;
+      /* background: #1a1a1a; */
+      overflow: hidden;
+    }
+
+    .slide-bg {
+      position: absolute;
+      inset: -20px;
+      background-size: cover;
+      background-position: center;
+      filter: blur(24px) brightness(0.65) saturate(1.1);
+      transform: scale(1.1);
+    }
+
+    .slider-slide img {
+      width: 100%; height: 100%;
+      object-fit: contain;       /* fills the fixed box; tall photos get cropped, not stretched */
+      display: block;
+    }
+
+    .slider-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.45);
+      color: #fff;
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 5;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+    }
+
+    .slider-nav-btn:hover { background: rgba(0,0,0,0.7); }
+    .slider-nav-btn.prev { left: 10px; }
+    .slider-nav-btn.next { right: 10px; }
+    .slider-nav-btn:disabled { opacity: .3; cursor: default; }
+
+    .slider-dots {
+      position: absolute;
+      bottom: 10px; left: 0; right: 0;
+      display: flex; justify-content: center; gap: 6px;
+      z-index: 5;
+    }
+
+    .slider-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.45);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background .15s, transform .15s;
+    }
+
+    .slider-dot.active {
+      background: #fff;
+      transform: scale(1.25);
+    }
+
+    .slider-counter {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 99px;
+      z-index: 5;
+    }
+    
     .article-body { padding: 1.75rem; }
 
     .article-meta {
@@ -252,8 +400,95 @@
     .info-val { color: #1a1a1a; font-weight: 500; text-align: right; }
 
     /* ── FOOTER ── */
-    footer { background: var(--blue-dk); color: #ddd; text-align: center; padding: 20px; font-size: 13px; }
+    footer { 
+      background: var(--blue-dk);
+      color: rgba(255,255,255,0.75);
+      font-family: 'Sarabun', sans-serif; 
+    }
 
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 32px 36px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+    }
+
+    .footer-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .footer-logo-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 12px;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.6);
+      max-width: 300px;
+      margin-bottom: 16px;
+    }
+    .footer-social {
+      display: flex;
+      gap: 10px;
+    }
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .footer-social a:hover {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    .footer-social svg {
+      width: 16px;
+      height: 16px;
+    }
+    .footer-col { display: flex; flex-direction: column; gap: 10px; }
+
+    .footer-col-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .footer-col a, .footer-col span {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.15s;
+      line-height: 1.6;
+    }
+
+    .footer-col a:hover { color: #fff; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      padding: 14px 32px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
     /* ── NOT FOUND ── */
     .not-found { text-align: center; padding: 4rem 1rem; }
     .not-found .big { font-size: 48px; margin-bottom: 12px; }
@@ -266,34 +501,33 @@
       .article-title { font-size: 17px; }
       .navbar { padding: 10px 16px; }
       .breadcrumb { padding: 8px 16px; }
+      .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 32px 20px 24px;
+      }
+      .article-slider, .article-hero { height: 300px;}
     }
   </style>
+  <script src="/api.js"></script>
 </head>
 <body>
 
   <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="social">
-      <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="3"/>
-        </svg>
-      </a>
-      <a href="https://www.facebook.com/stucon.mahidol" aria-label="Facebook" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-      </a>
-    </div>
-    <a href="tel:075476519">โทรศัพท์ : 075-476-519</a>
-  </div>
+  
 
   <!-- NAVBAR -->
   <header class="navbar">
     <a href="/index.html" class="logo">
-      <span class="logo-mark">stucon.mahidol</span>
-      <span class="logo-sub">สภานักศึกษา<br>มหาวิทยาลัยมหิดล</span>
+      <img class="logo-img" src="/image/instagram/Mahidol_U.png">
+      <div class="logo-text-wrap">
+        <span class="logo-mark">สภานักศึกษา มหาวิทยาลัยมหิดล</span>
+        <span class="logo-sub">Student Council · Mahidol University</span>
+      </div>
+   
     </a>
+
+
     <nav>
       <a href="/index.html">
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -350,116 +584,105 @@
     </aside>
   </div>
 
-  <footer>© 2568 สภานักศึกษา มหาวิทยาลัยมหิดล</footer>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+
+      <!-- Logo & Description -->
+      <div class="footer-brand">
+        <div class="footer-logo">สภานักศึกษา</div>
+        <div class="footer-logo-sub">มหาวิทยาลัยมหิดล วิทยาเขตวิทยาลัยนานาชาติ</div>
+        <p class="footer-desc">องค์กรนักศึกษาที่ดำเนินงานเพื่อส่งเสริมสิทธิและผลประโยชน์ของนักศึกษา มหาวิทยาลัยมหิดล</p>
+        <!-- Social Icons -->
+        <div class="footer-social">
+          <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/stucon.mahidol" aria-label="Facebook" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@stucon.mahidol" aria-label="TikTok" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.74a4.85 4.85 0 0 1-1.01-.05z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@stucon.mahidol" aria-label="YouTube" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Links -->
+      <div class="footer-col">
+        <div class="footer-col-title">เมนูหลัก</div>
+        <a href="/index.html">หน้าแรก</a>
+        <a href="/news-history.html">ประวัติข่าว</a>
+        <a href="#">บริการนักศึกษา</a>
+        <a href="#">เกี่ยวกับเรา</a>
+      </div>
+      
+      <!-- Contact -->
+      <div class="footer-col">
+        <div class="footer-col-title">ติดต่อเรา</div>
+        <span>📞 075-476-519</span>
+        <span>📍 มหาวิทยาลัยมหิดล</span>
+        <span style="margin-top:4px;">วิทยาเขตวิทยาลัยนานาชาติ</span>
+        <a href="mailto:stucon@mahidol.ac.th" style="margin-top:4px;">✉️ stucon@mahidol.ac.th</a>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <span>© 2568 สภานักศึกษา มหาวิทยาลัยมหิดล วิทยาเขตวิทยาลัยนานาชาติ · สงวนลิขสิทธิ์</span>
+    </div>
+  </footer>
 
   <script>
   // ===================================================
   // NEWS DATABASE — เพิ่ม/แก้ข่าวได้ที่นี่
   // ===================================================
-  var NEWS_DB = [
-    {
-      id: '1',
-      tag: 'แถลงการณ์',
-      title: 'แถลงการณ์ร่วมสภานักศึกษา มหาวิทยาลัยมหิดล และมหาวิทยาลัยธรรมศาสตร์ ศูนย์ลำปาง',
-      subtitle: 'เรื่อง ชะตากรรม ร่าง พรบ. อากาศสะอาด',
-      date: '12 พ.ค. 2568',
-      author: 'สภานักศึกษา มมหาวิทยาลัยมหิดล',
-      img: 'image/instagram/694713966_18091086695595564_3927902782432047810_n.webp',
-      content: [
-        'สภานักศึกษา มหาวิทยาลัยมหิดล และสภานักศึกษา มหาวิทยาลัยธรรมศาสตร์ ศูนย์ลำปาง ขอออกแถลงการณ์ร่วมเพื่อแสดงจุดยืนและความห่วงใยต่อสถานการณ์ร่าง พระราชบัญญัติอากาศสะอาด ที่กำลังอยู่ในกระบวนการพิจารณาของรัฐสภา',
-        'ทั้งสองสถาบันเห็นพ้องกันว่า คุณภาพอากาศที่สะอาดเป็นสิทธิขั้นพื้นฐานของประชาชนทุกคน โดยเฉพาะนักศึกษาและประชาชนในพื้นที่ภาคเหนือที่ได้รับผลกระทบจากปัญหาหมอกควันพิษอย่างรุนแรงในทุกปี',
-        'เราขอเรียกร้องให้รัฐสภาเร่งผ่านร่าง พรบ. อากาศสะอาด ที่มีเนื้อหาครอบคลุมและมีกลไกการบังคับใช้ที่มีประสิทธิภาพ เพื่อให้ประชาชนชาวไทยได้รับการคุ้มครองด้านสิทธิในอากาศสะอาดอย่างแท้จริง'
-      ],
-      pdfs: [
-        { name: 'แถลงการณ์ร่วม-อากาศสะอาด.pdf', size: '245 KB', url: 'docs/statement-clean-air.pdf' }
-      ],
-      relatedIds: ['2', '4']
-    },
-    {
-      id: '2',
-      tag: 'ประกาศ',
-      title: 'ประกาศสภานักศึกษามหาวิทยาลัยมหิดล',
-      subtitle: 'เรื่อง ประกาศรายชื่อคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
-      date: '7 พ.ค. 2568',
-      author: 'สภานักศึกษา มหาวิทยาลัยมหิดล',
-      img: 'image/instagram/659591458_18090415328595564_8426637387155158581_n.webp',
-      content: [
-        'ตามที่สภานักศึกษา มหาวิทยาลัยมหิดล ได้ดำเนินการสรรหาและคัดเลือกนักศึกษาเพื่อดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569 เสร็จสิ้นแล้วนั้น',
-        'สภานักศึกษาจึงขอประกาศรายชื่อผู้ที่ได้รับการรับรองให้ดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569 ตามเอกสารแนบ',
-        'ทั้งนี้ หากมีข้อสงสัยประการใด สามารถติดต่อสอบถามได้ที่สำนักงานสภานักศึกษา มหาวิทยาลัยมหิดล หรือช่องทางโซเชียลมีเดียของสภานักศึกษา'
-      ],
-      pdfs: [
-        { name: 'ประกาศรายชื่อคณะกรรมการสโมสร-2569.pdf', size: '380 KB', url: 'docs/committee-list-2569.pdf' },
-        { name: 'ภาคผนวก-รายชื่อ.pdf', size: '120 KB', url: 'docs/appendix-list-2569.pdf' }
-      ],
-      relatedIds: ['3', '5']
-    },
-    {
-      id: '3',
-      tag: 'ประกาศ',
-      title: 'ประกาศสภานักศึกษามหาวิทยาลัยมหิดล',
-      subtitle: 'เรื่อง ประกาศรายชื่อสมาชิกสภานักศึกษามหาวิทยาลัยมหิดล ประจำปีวาระ 2569 (ฉบับไม่เป็นทางการ)',
-      date: '23 เม.ย. 2568',
-      author: 'สภานักศึกษา มหาวิทยาลัยมหิดล',
-      img: 'image/instagram/671187312_18088653605595564_5971510714895221743_n.webp',
-      content: [
-        'สภานักศึกษา มหาวิทยาลัยมหิดล ขอประกาศรายชื่อสมาชิกสภานักศึกษามหาวิทยาลัยมหิดล ประจำปีวาระ 2569 (ฉบับไม่เป็นทางการ) เพื่อให้นักศึกษาและบุคลากรได้รับทราบ',
-        'รายชื่อดังกล่าวเป็นรายชื่อเบื้องต้นที่ได้รับการสรรหาตามกระบวนการที่กำหนด ก่อนที่จะมีการประกาศอย่างเป็นทางการต่อไป',
-        'หากมีการเปลี่ยนแปลงประการใด สภานักศึกษาจะแจ้งให้ทราบผ่านช่องทางการสื่อสารอย่างเป็นทางการของสภานักศึกษา'
-      ],
-      pdfs: [
-        { name: 'รายชื่อสมาชิกสภานักศึกษา-2569-ไม่เป็นทางการ.pdf', size: '210 KB', url: 'docs/members-unofficial-2569.pdf' }
-      ],
-      relatedIds: ['2', '4']
-    },
-    {
-      id: '4',
-      tag: 'แถลงการณ์',
-      title: 'แถลงการณ์ขอโทษ',
-      subtitle: 'กรณีความผิดพลาดในลำดับการรับรองรายชื่อนักศึกษาสรรหาเพื่อดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
-      date: '23 เม.ย. 2568',
-      author: 'สภานักศึกษา มหาวิทยาลัยมหิดล',
-      img: 'image/instagram/674395107_18088653500595564_8262444920406159664_n.webp',
-      content: [
-        'สภานักศึกษา มหาวิทยาลัยมหิดล ขอแสดงความรับผิดชอบและขอโทษต่อความผิดพลาดที่เกิดขึ้นในกระบวนการรับรองรายชื่อนักศึกษาสรรหาเพื่อดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
-        'ความผิดพลาดดังกล่าวเกิดจากความคลาดเคลื่อนในกระบวนการตรวจสอบลำดับรายชื่อ ซึ่งสภานักศึกษายืนยันว่าจะดำเนินการแก้ไขและปรับปรุงกระบวนการให้รัดกุมยิ่งขึ้นในอนาคต',
-        'สภานักศึกษาขอน้อมรับคำวิจารณ์และข้อเสนอแนะทุกประการ และขอให้คำมั่นว่าจะดำเนินการด้วยความโปร่งใส ตรวจสอบได้ และเป็นธรรมแก่นักศึกษาทุกคน'
-      ],
-      pdfs: [
-        { name: 'แถลงการณ์ขอโทษ-คณะกรรมการสโมสร.pdf', size: '185 KB', url: 'docs/apology-statement.pdf' }
-      ],
-      relatedIds: ['1', '3']
-    },
-    {
-      id: '5',
-      tag: 'ประกาศ',
-      title: 'นักศึกษามหิดลทุกคนเตรียมแอพ We Mahidol ให้พร้อม!',
-      subtitle: 'ลงมติรับรองรายชื่อนักศึกษาสรรหาเป็นคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
-      date: '20 เม.ย. 2568',
-      author: 'สภานักศึกษา มหาวิทยาลัยมหิดล',
-      img: 'image/instagram/670603463_18088192883595564_5219576456899627411_n.webp',
-      content: [
-        'สภานักศึกษา มหาวิทยาลัยมหิดล ขอเชิญชวนนักศึกษาทุกท่านร่วมลงมติรับรองรายชื่อนักศึกษาสรรหาเพื่อดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
-        'การลงมติจะดำเนินการผ่านแอพพลิเคชัน We Mahidol ในวันที่ 21-22 เมษายน 2568 ขอให้นักศึกษาทุกคนเตรียมแอพพลิเคชันให้พร้อมและใช้สิทธิ์ในการออกเสียงของตน',
-        'การมีส่วนร่วมของนักศึกษาทุกคนเป็นสิ่งสำคัญอย่างยิ่งต่อกระบวนการประชาธิปไตยภายในมหาวิทยาลัย สภานักศึกษาจึงขอเชิญชวนนักศึกษาทุกท่านใช้สิทธิ์ออกเสียงเพื่ออนาคตของประชาคมมหิดล'
-      ],
-      pdfs: [],
-      relatedIds: ['2', '3']
-    }
-  ];
-
+  
+  
+  // ===================================================
+  // STATE
+  // ===================================================
+  var sliderImages = [];
+  var sliderIndex  = 0;
+ 
   // ===================================================
   // RENDER
   // ===================================================
-  function getNewsById(id) {
-    return NEWS_DB.find(function(n) { return n.id === id; });
-  }
-
-  function renderArticle() {
+  async function renderArticle() {
     var params = new URLSearchParams(window.location.search);
     var id = params.get('id');
-    var news = id ? getNewsById(id) : null;
-
+    var news = null;
+ 
+    if (id) {
+      try {
+        var raw = await API.getNewsById(id);
+        if (!raw.error) {
+          news = {
+            id      : raw.id,
+            tag     : raw.tag,
+            title   : raw.title,
+            subtitle: raw.subtitle || '',
+            date    : raw.date || '',
+            author  : raw.author || '',
+            img     : raw.img_path ? '/' + raw.img_path : '',
+            images  : (raw.images || []).map(function(p) { return '/' + p; }),
+            content : raw.content ? [raw.content] : [],
+            pdfs    : (raw.pdfs || []).map(function(p) {
+              var filePath = p.file_path || '';
+              var fileUrl  = (filePath.startsWith('http://') || filePath.startsWith('https://'))
+                ? filePath
+                : '/' + filePath;
+              return { name: p.file_name, size: p.file_size, url: fileUrl };
+            }),
+            related : raw.related || [],
+          };
+        }
+      } catch(e) { console.error(e); }
+    }
+ 
     if (!news) {
       document.getElementById('article-area').innerHTML =
         '<div class="not-found"><div class="big">📭</div><h2>ไม่พบข่าวที่ต้องการ</h2>' +
@@ -467,44 +690,55 @@
         '<a href="/news-history.html">← กลับไปดูข่าวทั้งหมด</a></div>';
       return;
     }
-
+ 
     // Breadcrumb
     document.getElementById('breadcrumb-title').textContent =
       news.title.length > 40 ? news.title.slice(0, 40) + '...' : news.title;
     document.title = news.title + ' - สภานักศึกษา มหาวิทยาลัยมหิดล';
-
-    // Hero image
-    var heroHTML = news.img
-      ? '<img src="' + news.img + '" class="article-hero" alt="' + news.title + '">'
-      : '<div class="article-hero-placeholder">📰</div>';
-
+ 
+    // ── Hero / Slider ──────────────────────────────
+    // images[] is the full gallery; fall back to single news.img if no gallery rows exist
+    sliderImages = news.images && news.images.length > 0
+      ? news.images
+      : (news.img ? [news.img] : []);
+    sliderIndex = 0;
+ 
+    var heroHTML;
+    if (sliderImages.length > 1) {
+      heroHTML = renderSliderHTML();
+    } else if (sliderImages.length === 1) {
+      heroHTML = '<img src="' + sliderImages[0] + '" class="article-hero" alt="' + news.title + '">';
+    } else {
+      heroHTML = '<div class="article-hero-placeholder">📰</div>';
+    }
+ 
     // Content paragraphs
     var contentHTML = news.content.map(function(p) {
       return '<p>' + p + '</p>';
     }).join('');
-
+ 
     // PDF section
     var pdfHTML = '';
     if (news.pdfs && news.pdfs.length > 0) {
       pdfHTML = '<div class="pdf-section"><div class="pdf-label">📎 เอกสารแนบ / ดาวน์โหลด</div>' +
         news.pdfs.map(function(pdf) {
-          return '<a class="pdf-card" href="' + pdf.url + '" download aria-label="ดาวน์โหลด ' + pdf.name + '">' +
+          var isGoogleDrive = pdf.url && pdf.url.includes('drive.google.com');
+          return '<a class="pdf-card" href="' + pdf.url + '" target="_blank" rel="noopener" aria-label="เปิดเอกสาร ' + pdf.name + '">' +
             '<div class="pdf-icon">PDF</div>' +
-            '<div class="pdf-info"><div class="pdf-name">' + pdf.name + '</div><div class="pdf-size">' + pdf.size + '</div></div>' +
-            '<div class="pdf-dl-btn">⬇ ดาวน์โหลด</div>' +
+            '<div class="pdf-info"><div class="pdf-name">' + pdf.name + '</div><div class="pdf-size">' + (pdf.size || '') + '</div></div>' +
+            '<div class="pdf-dl-btn">' + (isGoogleDrive ? '🔗 เปิดใน Drive' : '⬇ ดาวน์โหลด') + '</div>' +
             '</a>';
         }).join('') + '</div>';
     }
-
+ 
     // Share section
     var shareURL = encodeURIComponent(window.location.href);
-    var shareTitle = encodeURIComponent(news.title);
     var shareHTML = '<div class="share-section"><div class="share-label">แชร์ข่าวนี้</div>' +
       '<div class="share-btns">' +
       '<a class="share-btn fb" href="https://www.facebook.com/sharer/sharer.php?u=' + shareURL + '" target="_blank" rel="noopener">👍 แชร์ Facebook</a>' +
       '<button class="share-btn copy" onclick="copyLink()">🔗 คัดลอกลิงก์ <span class="copy-ok" id="copy-ok">✓ คัดลอกแล้ว!</span></button>' +
       '</div></div>';
-
+ 
     document.getElementById('article-area').innerHTML =
       '<div class="article">' +
       heroHTML +
@@ -517,7 +751,7 @@
       pdfHTML +
       shareHTML +
       '</div></div>';
-
+ 
     // Info card
     document.getElementById('info-card').innerHTML =
       '<div class="sidebar-title">ข้อมูลข่าว</div>' +
@@ -525,39 +759,115 @@
       '<div class="info-row"><span class="info-key">หมวดหมู่</span><span class="info-val">' + news.tag + '</span></div>' +
       '<div class="info-row"><span class="info-key">โดย</span><span class="info-val">' + news.author + '</span></div>' +
       '<div class="info-row"><span class="info-key">เอกสารแนบ</span><span class="info-val">' + (news.pdfs ? news.pdfs.length : 0) + ' ไฟล์</span></div>';
-
+ 
     // Related news
     var relatedHTML = '';
-    if (news.relatedIds && news.relatedIds.length > 0) {
-      news.relatedIds.forEach(function(rid) {
-        var r = getNewsById(rid);
-        if (!r) return;
-        var thumb = r.img
-          ? '<img class="related-thumb" src="' + r.img + '" alt="">'
+    if (news.related && news.related.length > 0) {
+      news.related.forEach(function(r) {
+        var thumb = r.img_path
+          ? '<img class="related-thumb" src="/' + r.img_path + '" alt="">'
           : '<div class="related-thumb-ph">📰</div>';
         relatedHTML +=
           '<a class="related-item" href="/news-detail.html?id=' + r.id + '">' +
           thumb +
-          '<div><div class="related-title">' + r.title + '</div><div class="related-date">' + r.date + '</div></div>' +
+          '<div><div class="related-title">' + r.title + '</div><div class="related-date">' + (r.date || '') + '</div></div>' +
           '</a>';
       });
     } else {
       relatedHTML = '<div style="font-size:13px;color:#aaa;">ไม่มีข่าวที่เกี่ยวข้อง</div>';
     }
     document.getElementById('related-list').innerHTML = relatedHTML;
-
+ 
     document.getElementById('sidebar-area').style.display = 'block';
   }
-
+ 
+  // ===================================================
+  // SLIDER (left/right swipe through multiple images)
+  // ===================================================
+  function renderSliderHTML() {
+    var slides = sliderImages.map(function(src, i) {
+      return '<div class="slider-slide"><img src="' + src + '" alt="รูปข่าว ' + (i + 1) + '" loading="' + (i === 0 ? 'eager' : 'lazy') + '"></div>';
+    }).join('');
+ 
+    var dots = sliderImages.map(function(_, i) {
+      return '<button class="slider-dot' + (i === 0 ? ' active' : '') + '" onclick="goToSlide(' + i + ')" aria-label="ไปที่รูปที่ ' + (i + 1) + '"></button>';
+    }).join('');
+ 
+    return '<div class="article-slider" id="article-slider">' +
+      '<div class="slider-track" id="slider-track">' + slides + '</div>' +
+      '<button class="slider-nav-btn prev" id="slider-prev" onclick="prevSlide()" aria-label="รูปก่อนหน้า">‹</button>' +
+      '<button class="slider-nav-btn next" id="slider-next" onclick="nextSlide()" aria-label="รูปต่อไป">›</button>' +
+      '<div class="slider-counter" id="slider-counter">1 / ' + sliderImages.length + '</div>' +
+      '<div class="slider-dots">' + dots + '</div>' +
+      '</div>';
+  }
+ 
+  function updateSliderPosition() {
+    var track = document.getElementById('slider-track');
+    if (!track) return;
+    track.style.transform = 'translateX(-' + (sliderIndex * 100) + '%)';
+ 
+    var counter = document.getElementById('slider-counter');
+    if (counter) counter.textContent = (sliderIndex + 1) + ' / ' + sliderImages.length;
+ 
+    var dots = document.querySelectorAll('.slider-dot');
+    dots.forEach(function(d, i) { d.classList.toggle('active', i === sliderIndex); });
+ 
+    var prevBtn = document.getElementById('slider-prev');
+    var nextBtn = document.getElementById('slider-next');
+    if (prevBtn) prevBtn.disabled = sliderIndex === 0;
+    if (nextBtn) nextBtn.disabled = sliderIndex === sliderImages.length - 1;
+  }
+ 
+  function nextSlide() {
+    if (sliderIndex < sliderImages.length - 1) {
+      sliderIndex++;
+      updateSliderPosition();
+    }
+  }
+ 
+  function prevSlide() {
+    if (sliderIndex > 0) {
+      sliderIndex--;
+      updateSliderPosition();
+    }
+  }
+ 
+  function goToSlide(i) {
+    sliderIndex = i;
+    updateSliderPosition();
+  }
+ 
+  // Touch swipe support for mobile
+  (function attachSwipe() {
+    var startX = null;
+    document.addEventListener('touchstart', function(e) {
+      if (!e.target.closest('#article-slider')) return;
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+ 
+    document.addEventListener('touchend', function(e) {
+      if (startX === null || !e.target.closest('#article-slider')) return;
+      var endX = e.changedTouches[0].clientX;
+      var diff = startX - endX;
+      if (Math.abs(diff) > 40) {
+        if (diff > 0) nextSlide(); else prevSlide();
+      }
+      startX = null;
+    }, { passive: true });
+  })();
+ 
   function copyLink() {
     navigator.clipboard.writeText(window.location.href).then(function() {
       var ok = document.getElementById('copy-ok');
       if (ok) { ok.style.display = 'inline'; setTimeout(function() { ok.style.display = 'none'; }, 2000); }
     });
   }
-
+ 
   renderArticle();
   </script>
+
+  
 
 </body>
 </html>
