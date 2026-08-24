@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>คณะบัณฑิตวิยาลัย</title>
+  <title>สภานักศึกษา มหาวิทยาลัยมหิดล</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&family=Noto+Serif+Thai:wght@700;900&display=swap" rel="stylesheet" /> -->
@@ -50,52 +50,173 @@
     .topbar .phone { display: flex; align-items: center; gap: 6px; }
     .topbar .phone svg { width: 16px; height: 16px; fill: currentColor; }
 
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--blue-dk);
+      color: rgba(255,255,255,0.75);
+      font-family: 'Sarabun', sans-serif;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 32px 36px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+    }
+
+    .footer-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .footer-logo-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 12px;
+    }
+
+    .footer-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.6);
+      max-width: 300px;
+      margin-bottom: 16px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 10px;
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .footer-social a:hover {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    .footer-social svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .footer-col { display: flex; flex-direction: column; gap: 10px; }
+
+    .footer-col-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .footer-col a, .footer-col span {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.15s;
+      line-height: 1.6;
+    }
+
+    .footer-col a:hover { color: #fff; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      padding: 14px 32px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    @media (max-width: 700px) {
+      .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 32px 20px 24px;
+      }
+    }
+
     /* ── NAVBAR ──────────────────────────────────── */
     .navbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 10px 32px;
-      background: var(--white);
-      border-bottom: 1px solid #e0e0e0;
+      background: var(--blue-dk);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
     }
 
     .logo {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       text-decoration: none;
     }
 
+    .logo-img {
+      width: 44px;
+      height: 44px;
+      /* object-fit: contain; */
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .logo-text-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+    }
+    
+
     /* Colourful "SAB" text logo – CSS only */
     .logo-mark {
-      font-size: 38px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -1px;
-      background: linear-gradient(135deg, #1a3f8f, #2196f3, #00bcd4, #1565c0, #0d2257);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      letter-spacing: 0;
+      background: none;
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: #fff;
+      background-clip: unset;
     }
 
     .logo-sub {
-      font-size: 9px;
-      color: #777;
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      line-height: 1.3;
-      max-width: 120px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0;
+      line-height: 1.4;
+      white-space: nowrap;
+      max-width: 200px;
     }
 
     /* Nav menu */
     nav { display: flex; gap: 4px; align-items: center; }
 
     nav a {
+      color: rgba(255,255,255,0.8) !important;
       display: flex;
       align-items: center;
       gap: 5px;
@@ -108,7 +229,7 @@
       transition: background .2s;
     }
 
-    nav a:hover { background: var(--blue-lt); }
+    nav a:hover{ background: var(--blue-lt); }
     nav a svg { width: 15px; height: 15px; fill: currentColor; }
 
     .dropdown { position: relative; }
@@ -165,6 +286,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      
     }
 
     /* Placeholder background — replace src with real image */
@@ -172,6 +294,10 @@
       position: absolute;
       inset: 0;
       background: url('image/gradualfact.webp') center/cover no-repeat;
+      padding: 32px 52px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+      overflow: hidden;
       /* background: linear-gradient(135deg, #0d2257 0%, #1a3f8f 35%, #2455b0 65%, #1e88e5 100%); */
       /* swap for: background: url('your-hero.jpg') center/cover no-repeat; */
     }
@@ -297,6 +423,7 @@
     .news-section {
       padding: 32px 52px 48px;
       background: var(--gray-lt);
+      
     }
  
     .news-header {
@@ -460,89 +587,17 @@
 </head>
 <body>
 
-  <!-- ① TOP BAR -->
-  <div class="topbar">
-    <div class="social">
-      <!-- Facebook icon -->
-      <a href="https://www.facebook.com/stucon.mahidol/" aria-label="Facebook">
-        <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-      </a>
-      <!-- Instagram icon -->
-      <!-- <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram">
-        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-      </a> -->
-
-      <!-- <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="3"/>
-        </svg>
-      </a> -->
-      <!-- Instagram icon -->
-      <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-        </svg>
-      </a>
-
-      <!-- Threads icon -->
-      <!-- <a href="https://www.threads.net/stucon.mahidol" target="_blank" aria-label="Threads">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12.5 2c-2.5 0-4.5 1-5.5 3-1 2-1 4 0 6 1 2 3 3 5 3s4-1 5-3c1-2 1-4 0-6-1-2-3-3-5-3z"/>
-          <path d="M16.5 8c0-2-1-4-3-5-2-1-4-1-6 0-2 1-3 3-3 5s1 4 3 5c2 1 4 1 6 0"/>
-          <circle cx="12" cy="12" r="1.5"/>
-        </svg>
-      </a> -->
-      <a href="https://www.threads.net/@stucon.mahidol" aria-label="Threads" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M17.5 7.5c-1.1-1.3-2.7-2-4.7-2-3.9 0-6.3
-           2.3-6.3 5.8 0 3.6 2.5 5.8 6.5 5.8 3.5 0 5.7-1.8 
-           5.7-4.5 0-2.2-1.4-3.7-4-4.2-.3-.1-.6-.1-.9-.1-.2-.7-.6-1.
-           2-1.1-1.6-.7-.6-1.7-.9-2.8-.9-2 0-3.4 1.1-3.4 
-           2.7h1.8c0-.7.7-1.2 1.6-1.2.5 0 .9.1 1.2.4.2.2.4.5.5.8-2.6.2-4.3 1.7-4.3 4 0 2.4 1.8 
-           3.9 4.5 3.9 1.5 0 2.7-.5 3.6-1.4.8-.8 1.2-1.9 1.2-3.1 0-.3 0-.7-.1-1 1.3.4 2 1.3 2 
-           2.5 0 1.8-1.6 3-4 3-3 0-4.8-1.6-4.8-4.3 0-2.6 1.7-4.3 4.5-4.3 1.5 0 2.7.5 3.5 1.5.7.8 1.1 1.9 1.1 3.1v.5H20v-.5c0-1.7-.5-3.2-1.5-4.3z"/>
-        </svg>
-      </a>
-
-      
-
-      <!-- TikTok icon -->
-      <a href="https://www.tiktok.com/@stucon.mahidol" target="_blank" aria-label="TikTok" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19.59 6.69a4 4 0 0 1-3.77-4.25V2h-3.45v13.67a2.5 2.5 0 1 1-2.5-2.5c.33 0 .64.06.93.17V9.85a5.94 5.94 0 0 0-5.86 5.93 5.93 5.93 0 0 0 8.35 5.45 5.94 5.94 0 0 0 3.53-5.45V9.85c.66.47 1.42.84 2.22 1.08V7.62c-.33-.08-.66-.13-1-.13z"/>
-        </svg>
-      </a>
-
-      <!-- YouTube icon -->
-      <!-- <a href="https://www.youtube.com/@stucon.mahidol" target="_blank" aria-label="YouTube">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
-          <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
-        </svg>
-      </a> -->
-      <a href="https://www.youtube.com/@stucon.mahidol" aria-label="YouTube" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 
-          12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 
-          24 12a31.4 31.4 0 0 0-.5-5.8zM9.75 15.5v-7l6 3.5-6 3.5z"/>
-        </svg>
-      </a>
-
-      <!-- Phone icon
-      <a href="tel:075476519" class="phone">
-        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.39 19a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 3.07 4.18 2 2 0 0 1 5.07 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L9.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        โทรศัพท์ : 075-476-519
-      </a> -->
-    </div>
-  </div>
+  
 
   <!-- ② NAVBAR -->
   <header class="navbar">
     <a href="/" class="logo">
-      <span class="logo-mark">stucon.mahidol</span>
-      <span class="logo-sub">สภานักศึกษา<br>มหาวิทยาลัยมหิดล</span>
+      <!-- Mahidol University official logo -->
+      <img class="logo-img" src="/image/instagram/Mahidol_U.png" >
+      <div class="logo-text-wrap">
+        <span class="logo-mark">สภานักศึกษา มหาวิทยาลัยมหิดล</span>
+        <span class="logo-sub">Student Council · Mahidol University</span>
+      </div>
     </a>
 
     <nav>
@@ -605,30 +660,26 @@
   </header>
 
   <!-- ③ BREADCRUMB -->
-  <div class="breadcrumb">
+  <!-- <div class="breadcrumb">
     <a href="/">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
       Home
     </a>
-  </div>
+  </div> -->
 
   <!-- ④ HERO SECTION -->
   <section class="hero">
     <!-- Replace .hero-bg with <img> or a CSS background-image for the real photo -->
     <div class="hero-bg"></div>
 
-    <div class="hero-content">
+    <!-- <div class="hero-content">
       <h1 class="hero-title-th">หัวใจของเรา คือนักศึกษา</h1>
       <p class="hero-subtitle-th">เพราะทุกปัญหา สำคัญกับเรา</p>
       <p class="hero-tagline">The Collegians Like an Ocean, The Ordeal Like an Aero.</p>
-    </div>
+    </div> -->
   </section>
 
-  <!-- ⑤ MAIN CONTENT AREA (placeholder for future sections) -->
-  <!-- <main style="min-height: 200px; padding: 48px 32px; text-align: center; color: #999; font-size: 15px;">
-    <!-- Additional page sections go here -->
-    เนื้อหาเพิ่มเติม / Additional content sections
-  </main> -->
+
 
 
 <!-- ⑤ SERVICE ICONS -->
@@ -711,7 +762,7 @@
               <span class="news-date">12 พ.ค. 2568</span>
             </div>
           </a>
- 
+          
           <a class="news-card" href="/news-detail.html?id=2">
             <!-- <div class="news-card-img" style="background:#e0f2fe"></div> -->
              <img src="image/instagram/659591458_18090415328595564_8426637387155158581_n.webp" 
@@ -845,8 +896,55 @@
 
 
   <!-- ⑥ FOOTER (placeholder) -->
-  <footer style="background: var(--blue-dk); color: #ddd; text-align: center; padding: 20px; font-size: 13px;">
-    © 2568 สภานักศึกษา มหาวิทยาลัยมหิดล · โทรศัพท์ 075-476-519
+  <footer>
+    <div class="footer-inner">
+
+      <!-- Logo & Description -->
+      <div class="footer-brand">
+        <div class="footer-logo">สภานักศึกษา</div>
+        <div class="footer-logo-sub">มหาวิทยาลัยมหิดล วิทยาเขตวิทยาลัยนานาชาติ</div>
+        <p class="footer-desc">องค์กรนักศึกษาที่ดำเนินงานเพื่อส่งเสริมสิทธิและผลประโยชน์ของนักศึกษา มหาวิทยาลัยมหิดล</p>
+        <!-- Social Icons -->
+        <div class="footer-social">
+          <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/stucon.mahidol" aria-label="Facebook" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@stucon.mahidol" aria-label="TikTok" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.74a4.85 4.85 0 0 1-1.01-.05z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@stucon.mahidol" aria-label="YouTube" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Links -->
+      <div class="footer-col">
+        <div class="footer-col-title">เมนูหลัก</div>
+        <a href="/index.html">หน้าแรก</a>
+        <a href="/news-history.html">ประวัติข่าว</a>
+        <a href="#">บริการนักศึกษา</a>
+        <a href="#">เกี่ยวกับเรา</a>
+      </div>
+
+      <!-- Contact -->
+      <div class="footer-col">
+        <div class="footer-col-title">ติดต่อเรา</div>
+        <span>📞 075-476-519</span>
+        <span>📍 มหาวิทยาลัยมหิดล</span>
+        <span style="margin-top:4px;">วิทยาเขตวิทยาลัยนานาชาติ</span>
+        <a href="mailto:stucon@mahidol.ac.th" style="margin-top:4px;">✉️ stucon@mahidol.ac.th</a>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <span>© 2568 สภานักศึกษา มหาวิทยาลัยมหิดล วิทยาเขตวิทยาลัยนานาชาติ · สงวนลิขสิทธิ์</span>
+    </div>
   </footer>
 
 </body>
