@@ -44,24 +44,52 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 32px;
-      background: var(--white);
-      border-bottom: 1px solid #e0e0e0;
+      background: var(--blue-dk);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
     }
 
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-mark { font-size: 16px; font-weight: 700; color: var(--blue); }
-    .logo-sub { font-size: 11px; color: #666; line-height: 1.4; }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .logo-img {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      display: block;
+    }
+    .logo-text-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+    }
+    .logo-mark {
+      font-size: 16px;
+      font-weight: 700; 
+      color: #fff;
+      line-height: 1.2;
+      letter-spacing: 0;
+      background: none;
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: #fff;
+      background-clip: unset;
+    }
+    .logo-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.4;
+      white-space: nowrap;
+      max-width: 200px; 
+    }
 
     nav { display: flex; align-items: center; gap: 4px; }
     nav a {
       display: flex; align-items: center; gap: 5px;
-      padding: 7px 12px;
       font-size: 14px;
-      color: #333;
+      padding: 7px 12px;
+      color: rgba(255,255,255,0.8);
       text-decoration: none;
       border-radius: 8px;
       transition: background .15s, color .15s;
@@ -270,45 +298,122 @@
     /* ===== FOOTER ===== */
     footer {
       background: var(--blue-dk);
-      color: #ddd;
-      text-align: center;
-      padding: 20px;
-      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      font-family: 'Sarabun', sans-serif;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 32px 36px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
     }
 
-    @media (max-width: 600px) {
+    .footer-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .footer-logo-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 12px;
+    }
+    .footer-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.6);
+      max-width: 300px;
+      margin-bottom: 16px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 10px;
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .footer-social a:hover {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    .footer-social svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .footer-col { display: flex; flex-direction: column; gap: 10px; }
+
+    .footer-col-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .footer-col a, .footer-col span {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.15s;
+      line-height: 1.6;
+    }
+
+    .footer-col a:hover { color: #fff; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      padding: 14px 32px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    @media (max-width: 700px) {
       .navbar { padding: 10px 16px; }
       .page-wrap { padding: 1.25rem 1rem 3rem; }
       .news-thumb, .news-thumb-placeholder { width: 70px; height: 55px; }
       .filter-bar { gap: 8px; }
+      .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 32px 20px 24px;
+      }
     }
   </style>
+  <script src="/api.js"></script>
 </head>
 <body>
 
   <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="social">
-      <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="3"/>
-        </svg>
-      </a>
-      <a href="https://www.facebook.com/stucon.mahidol" aria-label="Facebook" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-      </a>
-    </div>
-    <a href="tel:075476519">โทรศัพท์ : 075-476-519</a>
-  </div>
+  
 
   <!-- NAVBAR -->
   <header class="navbar">
     <a href="/index.html" class="logo">
-      <span class="logo-mark">stucon.mahidol</span>
-      <span class="logo-sub">สภานักศึกษา<br>มหาวิทยาลัยมหิดล</span>
+      <img class="logo-img" src="/image/instagram/Mahidol_U.png">
+      <div class="logo-text-wrap">
+        <span class="logo-mark">สภานักศึกษา มหาวิทยาลัยมหิดล</span>
+        <span class="logo-sub">Student Council · Mahidol University</span>
+      </div>
     </a>
+
     <nav>
       <a href="/index.html">
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -356,118 +461,83 @@
     <div id="news-container"></div>
   </div>
 
-  <footer>© 2568 สภานักศึกษา มหาวิทยาลัยมหิดล</footer>
+  <footer>
+    <div class="footer-inner">
+
+      <!-- Logo & Description -->
+      <div class="footer-brand">
+        <div class="footer-logo">สภานักศึกษา</div>
+        <div class="footer-logo-sub">มหาวิทยาลัยมหิดล วิทยาเขตวิทยาลัยนานาชาติ</div>
+        <p class="footer-desc">องค์กรนักศึกษาที่ดำเนินงานเพื่อส่งเสริมสิทธิและผลประโยชน์ของนักศึกษา มหาวิทยาลัยมหิดล</p>
+        <!-- Social Icons -->
+        <div class="footer-social">
+          <a href="https://www.instagram.com/stucon.mahidol/" aria-label="Instagram" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/stucon.mahidol" aria-label="Facebook" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@stucon.mahidol" aria-label="TikTok" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.74a4.85 4.85 0 0 1-1.01-.05z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@stucon.mahidol" aria-label="YouTube" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Links -->
+      <div class="footer-col">
+        <div class="footer-col-title">เมนูหลัก</div>
+        <a href="/index.html">หน้าแรก</a>
+        <a href="/news-history.html">ประวัติข่าว</a>
+        <a href="#">บริการนักศึกษา</a>
+        <a href="#">เกี่ยวกับเรา</a>
+      </div>
+
+      <!-- Contact -->
+      <div class="footer-col">
+        <div class="footer-col-title">ติดต่อเรา</div>
+        <span>📞 075-476-519</span>
+        <span>📍 มหาวิทยาลัยมหิดล</span>
+        <span style="margin-top:4px;">วิทยาเขตวิทยาลัยนานาชาติ</span>
+        <a href="mailto:stucon@mahidol.ac.th" style="margin-top:4px;">✉️ stucon@mahidol.ac.th</a>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <span>© 2568 สภานักศึกษา มหาวิทยาลัยมหิดล วิทยาเขตวิทยาลัยนานาชาติ · สงวนลิขสิทธิ์</span>
+    </div>
+  </footer>
 
   <script>
     // ===== NEWS DATA =====
     // เพิ่มข่าวได้ที่นี่ — sortYear คือ ค.ศ. สำหรับ sort, displayYear คือ พ.ศ. สำหรับแสดงผล
-    var NEWS = [
-      {
-        id: 1,
-        tag: 'แถลงการณ์',
-        title: 'แถลงการณ์ร่วมสภานักศึกษา มหาวิทยาลัยมหิดล และมหาวิทยาลัยธรรมศาสตร์ ศูนย์ลำปาง',
-        desc: 'เรื่อง ชะตากรรม ร่าง พรบ. อากาศสะอาด',
-        date: '12 พ.ค. 2568',
-        sortDate: '2025-05-12',
-        displayYear: '2568',
-        img: 'image/instagram/694713966_18091086695595564_3927902782432047810_n.webp'
-      },
-      {
-        id: 2,
-        tag: 'ประกาศ',
-        title: 'ประกาศสภานักศึกษามหาวิทยาลัยมหิดล',
-        desc: 'เรื่อง ประกาศรายชื่อคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
-        date: '7 พ.ค. 2568',
-        sortDate: '2025-05-07',
-        displayYear: '2568',
-        img: 'image/instagram/659591458_18090415328595564_8426637387155158581_n.webp'
-      },
-      {
-        id: 3,
-        tag: 'ประกาศ',
-        title: 'ประกาศสภานักศึกษามหาวิทยาลัยมหิดล',
-        desc: 'เรื่อง ประกาศรายชื่อสมาชิกสภานักศึกษามหาวิทยาลัยมหิดล ประจำปีวาระ 2569 (ฉบับไม่เป็นทางการ)',
-        date: '23 เม.ย. 2568',
-        sortDate: '2025-04-23',
-        displayYear: '2568',
-        img: 'image/instagram/671187312_18088653605595564_5971510714895221743_n.webp'
-      },
-      {
-        id: 4,
-        tag: 'แถลงการณ์',
-        title: 'แถลงการณ์ขอโทษ',
-        desc: 'กรณีความผิดพลาดในลำดับการรับรองรายชื่อนักศึกษาสรรหาเพื่อดำรงตำแหน่งคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569',
-        date: '23 เม.ย. 2568',
-        sortDate: '2025-04-23',
-        displayYear: '2568',
-        img: 'image/instagram/674395107_18088653500595564_8262444920406159664_n.webp'
-      },
-      {
-        id: 5,
-        tag: 'ประกาศ',
-        title: 'นักศึกษามหิดลทุกคนเตรียมแอพ We Mahidol ให้พร้อม!',
-        desc: 'ลงมติรับรองรายชื่อนักศึกษาสรรหาเป็นคณะกรรมการสโมสรนักศึกษามหาวิทยาลัยมหิดล ประจำปีการศึกษา 2569 วันที่ 21-22 เมษายน 2569',
-        date: '20 เม.ย. 2568',
-        sortDate: '2025-04-20',
-        displayYear: '2568',
-        img: 'image/instagram/670603463_18088192883595564_5219576456899627411_n.webp'
-      },
-      // ตัวอย่างข่าวปีก่อน (2567)
-      {
-        id: 6,
-        tag: 'กิจกรรม',
-        title: 'งานสัมมนาวิชาการประจำปี 2567',
-        desc: 'ขอเชิญนักศึกษาและบุคลากรเข้าร่วมงานสัมมนาวิชาการประจำปีการศึกษา 2567',
-        date: '15 พ.ย. 2567',
-        sortDate: '2024-11-15',
-        displayYear: '2567',
-        img: ''
-      },
-      {
-        id: 7,
-        tag: 'ประกาศ',
-        title: 'ประกาศผลการเลือกตั้งสภานักศึกษา ประจำปี 2567',
-        desc: 'ประกาศรายชื่อผู้ได้รับการเลือกตั้งเป็นสมาชิกสภานักศึกษา มหาวิทยาลัยมหิดล ประจำปีการศึกษา 2567',
-        date: '3 มิ.ย. 2567',
-        sortDate: '2024-06-03',
-        displayYear: '2567',
-        img: ''
-      },
-      {
-        id: 8,
-        tag: 'บริการ',
-        title: 'เปิดรับสมัครทุนการศึกษา ประจำปีการศึกษา 2567',
-        desc: 'สภานักศึกษาเปิดรับสมัครนักศึกษาที่ขาดแคลนทุนทรัพย์เพื่อรับทุนการศึกษา ประจำปีการศึกษา 2567',
-        date: '10 มี.ค. 2567',
-        sortDate: '2024-03-10',
-        displayYear: '2567',
-        img: ''
-      },
-      // ตัวอย่างปี 2566
-      {
-        id: 9,
-        tag: 'กิจกรรม',
-        title: 'โครงการค่ายอาสาพัฒนาชนบท ปี 2566',
-        desc: 'สภานักศึกษาจัดโครงการค่ายอาสาพัฒนาชนบท เพื่อส่งเสริมจิตสาธารณะของนักศึกษา',
-        date: '20 ส.ค. 2566',
-        sortDate: '2023-08-20',
-        displayYear: '2566',
-        img: ''
-      },
-      {
-        id: 10,
-        tag: 'ประกาศ',
-        title: 'ประกาศรับสมัครสมาชิกสภานักศึกษา ปีการศึกษา 2566',
-        desc: 'เปิดรับสมัครนักศึกษาที่มีความสนใจเข้ารับการคัดเลือกเป็นสมาชิกสภานักศึกษา',
-        date: '1 เม.ย. 2566',
-        sortDate: '2023-04-01',
-        displayYear: '2566',
-        img: ''
-      },
-    ];
+    var NEWS = []; // loaded from API
 
     // ===== INIT =====
-    function init() {
+    async function init() {
+      try {
+        NEWS = await API.getNews();
+        // Normalize
+        NEWS = NEWS.map(function(n) {
+          return {
+            id          : n.id,
+            tag         : n.tag || '',
+            title       : n.title || '',
+            desc        : n.subtitle || '',
+            date        : n.date || '',
+            sortDate    : (n.published_at || '').slice(0,10),
+            displayYear : n.published_at ? String(parseInt(n.published_at.slice(0,4)) + 543) : '',
+            img         : n.img_path ? '/' + n.img_path : '',
+          };
+        });
+      } catch(e) {
+        console.error('init error:', e);
+        NEWS = [];
+      }
       // Sort by date descending
       NEWS.sort(function(a, b) { return b.sortDate.localeCompare(a.sortDate); });
 
@@ -536,7 +606,7 @@
               var thumb = n.img
                 ? '<img class="news-thumb" src="' + n.img + '" alt="" loading="lazy">'
                 : '<div class="news-thumb-placeholder">📰</div>';
-              return '<a class="news-item" href="' + (n.id <=5 ? '/news-detail.html?id=' + n.id : '#') + '">'
+              return '<a class="news-item" href="/news-detail.html?id=' + n.id + '">'
                 + thumb
                 + '<div class="news-body">'
                 + '<div class="news-meta">'
