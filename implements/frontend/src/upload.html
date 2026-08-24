@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - จัดการข่าวประชาสัมพันธ์</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="/api.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -15,7 +16,6 @@
       min-height: 100vh;
     }
 
-    /* ===== LAYOUT ===== */
     .app { display: flex; min-height: 100vh; }
 
     .sidebar {
@@ -24,6 +24,8 @@
       color: #fff;
       padding: 1.5rem 0;
       flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
     }
 
     .sidebar-logo {
@@ -33,8 +35,13 @@
       border-bottom: 1px solid rgba(255,255,255,0.1);
       margin-bottom: 1rem;
     }
-
-    .sidebar-logo span { font-size: 11px; font-weight: 400; opacity: 0.6; display: block; margin-top: 2px; }
+    .sidebar-logo span { 
+      font-size: 11px; 
+      font-weight: 400; 
+      opacity: 0.6; 
+      display: block; 
+      margin-top: 2px; 
+    }
 
     .nav-item {
       display: flex;
@@ -48,11 +55,9 @@
       text-decoration: none;
       color: #fff;
     }
-    
     .nav-item.active { background: rgba(255,255,255,0.12); opacity: 1; font-weight: 500; }
     .nav-item:hover { background: rgba(255,255,255,0.08); opacity: 1; }
-    .nav-icon { font-size: 16px;}
-
+    .nav-icon { font-size: 16px; }
 
     .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
@@ -83,12 +88,10 @@
       gap: 5px;
       transition: background 0.15s;
     }
-
     .btn-new:hover { background: #0C447C; }
 
     .content { padding: 1.5rem; overflow-y: auto; flex: 1; }
 
-    /* ===== TOAST ===== */
     .toast {
       position: fixed;
       top: 1rem;
@@ -105,19 +108,12 @@
       z-index: 999;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-
     .toast.error { background: #fde8e8; border-color: #f09595; color: #A32D2D; }
 
-    /* ===== NEWS LIST VIEW ===== */
     #view-list { display: block; }
     #view-form { display: none; }
 
-    .filter-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 1.25rem;
-      align-items: center;
-    }
+    .filter-row { display: flex; gap: 10px; margin-bottom: 1.25rem; align-items: center; }
 
     .search-box {
       flex: 1;
@@ -128,7 +124,6 @@
       font-family: 'Sarabun', sans-serif;
       outline: none;
     }
-
     .search-box:focus { border-color: #378ADD; box-shadow: 0 0 0 3px rgba(55,138,221,0.1); }
 
     .filter-select {
@@ -170,12 +165,19 @@
       align-items: center;
       transition: background 0.1s;
     }
-
     .news-row:last-child { border-bottom: none; }
     .news-row:hover { background: #fafafa; }
 
-    .news-title-cell { font-size: 14px; font-weight: 500; color: #1a1a1a; }
-    .news-title-cell .sub { font-size: 12px; color: #999; font-weight: 400; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .news-title-cell { font-size: 14px; font-weight: 500; color: #1a1a1a; min-width: 0; }
+    .news-title-cell .sub { 
+      font-size: 12px; 
+      color: #999; 
+      font-weight: 400; 
+      margin-top: 2px; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+    }
 
     .badge {
       display: inline-flex;
@@ -187,19 +189,8 @@
       color: #0C447C;
     }
 
-    .status-dot {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 12px;
-    }
-
-    .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-    }
-
+    .status-dot { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; }
     .dot.published { background: #4CAF50; }
     .dot.draft { background: #FFC107; }
 
@@ -216,29 +207,15 @@
       border: 0.5px solid;
       transition: background 0.15s;
     }
-
     .btn-edit { background: #fff; border-color: #378ADD; color: #185FA5; }
     .btn-edit:hover { background: #E6F1FB; }
-
     .btn-delete { background: #fff; border-color: #f09595; color: #E24B4A; }
     .btn-delete:hover { background: #fde8e8; }
 
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: #aaa;
-      font-size: 14px;
-    }
-
+    .empty-state { text-align: center; padding: 3rem 1rem; color: #aaa; font-size: 14px; }
     .empty-state .big { font-size: 32px; margin-bottom: 8px; }
 
-    /* ===== FORM VIEW ===== */
-    .form-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 1.25rem;
-    }
+    .form-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
 
     .btn-back {
       padding: 6px 12px;
@@ -250,17 +227,11 @@
       cursor: pointer;
       color: #555;
     }
-
     .btn-back:hover { background: #f0f0f0; }
 
     .form-title { font-size: 16px; font-weight: 600; }
 
-    .form-layout {
-      display: grid;
-      grid-template-columns: 1fr 240px;
-      gap: 1.25rem;
-      align-items: start;
-    }
+    .form-layout { display: grid; grid-template-columns: 1fr 240px; gap: 1.25rem; align-items: start; }
 
     .card {
       background: #fff;
@@ -272,15 +243,9 @@
 
     .field { margin-bottom: 1rem; }
     .field:last-child { margin-bottom: 0; }
+    .field label { display: block; font-size: 13px; color: #666; margin-bottom: 6px; }
 
-    .field label {
-      display: block;
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 6px;
-    }
-
-    input[type="text"], textarea, select {
+    input[type="text"], input[type="date"], textarea, select {
       width: 100%;
       font-size: 14px;
       font-family: 'Sarabun', sans-serif;
@@ -292,8 +257,7 @@
       outline: none;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
-
-    input[type="text"]:focus, textarea:focus, select:focus {
+    input[type="text"]:focus, input[type="date"]:focus, textarea:focus, select:focus {
       border-color: #378ADD;
       box-shadow: 0 0 0 3px rgba(55,138,221,0.12);
     }
@@ -317,7 +281,6 @@
       flex-shrink: 0;
     }
 
-    /* Tabs */
     .tab-row {
       display: flex;
       border: 0.5px solid #ccc;
@@ -336,11 +299,9 @@
       color: #888;
       cursor: pointer;
     }
-
     .tab-btn:not(:last-child) { border-right: 0.5px solid #ccc; }
     .tab-btn.active { background: #f0f0f0; color: #1a1a1a; font-weight: 500; }
 
-    /* Drop zones */
     .drop-zone {
       border: 1.5px dashed #ccc;
       border-radius: 12px;
@@ -350,31 +311,103 @@
       background: #fafafa;
       transition: background 0.15s, border-color 0.15s;
     }
-
     .drop-zone:hover, .drop-zone.drag-over { background: #f0f6ff; border-color: #378ADD; }
-    .drop-zone.pdf-mode { border-color: #f09595; background: #fff8f8; }
-    .drop-zone.pdf-mode:hover, .drop-zone.pdf-mode.drag-over { background: #fde8e8; border-color: #E24B4A; }
 
     .drop-icon { font-size: 26px; margin-bottom: 6px; }
     .drop-text { font-size: 14px; color: #555; }
     .drop-sub { font-size: 12px; color: #aaa; margin-top: 4px; }
 
-    .img-preview-wrap { display: none; position: relative; }
-    .img-preview-wrap img { width: 100%; max-height: 160px; object-fit: cover; border-radius: 8px; }
-
-    .img-remove {
-      position: absolute; top: 8px; right: 8px;
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.5);
-      color: #fff; border: none; cursor: pointer; font-size: 12px;
+    /* ── Image gallery (multi-image) ── */
+    .img-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
     }
+
+    .img-gallery-item {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #eee;
+    }
+
+    .img-gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .img-gallery-item .cover-badge {
+      position: absolute;
+      bottom: 4px; left: 4px;
+      background: rgba(24,95,165,0.9);
+      color: #fff;
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 99px;
+    }
+
+    .img-remove-x {
+      position: absolute;
+      top: 4px; right: 4px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .img-add-more {
+      width: 100%;
+      aspect-ratio: 1;
+      border: 1.5px dashed #ccc;
+      border-radius: 8px;
+      background: #fafafa;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      color: #aaa;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .img-add-more:hover { background: #f0f6ff; border-color: #378ADD; color: #378ADD; }
+
+    .pdf-link-label { font-size: 12px; color: #888; margin-bottom: 6px; display: block; }
+    .pdf-link-row { display: flex; gap: 8px; align-items: center; }
+
+    .pdf-link-input {
+      flex: 1;
+      padding: 9px 12px;
+      border: 0.5px solid #f09595;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      background: #fff8f8;
+    }
+    .pdf-link-input:focus { border-color: #E24B4A; box-shadow: 0 0 0 3px rgba(226,75,74,0.1); }
+
+    .pdf-link-clear {
+      padding: 8px 12px;
+      border: 0.5px solid #f09595;
+      border-radius: 8px;
+      background: #fff;
+      color: #E24B4A;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'Sarabun', sans-serif;
+    }
+    .pdf-link-clear:hover { background: #fde8e8; }
+
+    .pdf-link-hint { font-size: 11px; color: #aaa; margin-top: 5px; }
 
     .pdf-file-row {
       display: none;
       align-items: center;
       gap: 10px;
       padding: 10px 12px;
+      margin-top: 10px;
       background: #fff0f0;
       border: 0.5px solid #f09595;
       border-radius: 8px;
@@ -391,15 +424,18 @@
     .pdf-info { flex: 1; min-width: 0; }
     .pdf-name { font-size: 12px; color: #A32D2D; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .pdf-size { font-size: 11px; color: #E24B4A; margin-top: 1px; }
-    .pdf-remove { background: none; border: none; cursor: pointer; color: #E24B4A; font-size: 15px; }
 
-    /* Preview card */
-    .preview-card {
-      background: #fff;
-      border: 0.5px solid #e0e0e0;
-      border-radius: 12px;
-      overflow: hidden;
+    .pdf-open-link {
+      padding: 5px 10px;
+      background: #E24B4A;
+      color: #fff;
+      border-radius: 6px;
+      font-size: 11px;
+      text-decoration: none;
+      flex-shrink: 0;
     }
+
+    .preview-card { background: #fff; border: 0.5px solid #e0e0e0; border-radius: 12px; overflow: hidden; }
 
     .preview-section-title {
       font-size: 11px;
@@ -429,6 +465,18 @@
       position: absolute; top: 0; left: 0;
     }
 
+    .prev-img-count {
+      position: absolute;
+      top: 6px; right: 6px;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 99px;
+      z-index: 2;
+      display: none;
+    }
+
     .prev-body { padding: 10px 12px; }
     .prev-badge { display: inline-flex; padding: 2px 8px; border-radius: 99px; font-size: 10px; font-weight: 500; background: #E6F1FB; color: #0C447C; margin-bottom: 6px; }
     .prev-title { font-size: 13px; font-weight: 500; color: #1a1a1a; margin-bottom: 3px; line-height: 1.4; }
@@ -436,10 +484,7 @@
     .prev-date { font-size: 10px; color: #aaa; }
     .prev-pdf { display: none; align-items: center; gap: 4px; margin-top: 6px; padding: 4px 8px; background: #fff0f0; border-radius: 5px; font-size: 10px; color: #A32D2D; }
 
-    /* Form actions */
-    .form-actions {
-      display: flex; gap: 10px; justify-content: flex-end; margin-top: 1rem;
-    }
+    .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 1rem; }
 
     .btn-cancel-form {
       padding: 8px 18px; font-size: 14px;
@@ -447,7 +492,6 @@
       border: 0.5px solid #ccc; border-radius: 8px;
       background: transparent; color: #666; cursor: pointer;
     }
-
     .btn-cancel-form:hover { background: #f0f0f0; }
 
     .btn-save {
@@ -458,10 +502,9 @@
       display: flex; align-items: center; gap: 6px;
       transition: background 0.15s;
     }
-
     .btn-save:hover { background: #0C447C; }
+    .btn-save:disabled { background: #aaa; cursor: not-allowed; }
 
-    /* ===== DELETE MODAL ===== */
     .modal-overlay {
       display: none;
       position: fixed; inset: 0;
@@ -515,13 +558,11 @@
 <body>
 <div class="app">
 
-  <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-logo">
       📰 News Admin
       <span>ระบบจัดการข่าว</span>
     </div>
-    
 
     <a class="nav-item" href="/index.html">
       <span class="nav-icon">🏠</span> หน้าหลัก
@@ -530,30 +571,29 @@
     <a class="nav-item active" href="/upload.html">
       <span class="nav-icon">📋</span> จัดการข่าว
     </a>
-    
+
     <a class="nav-item" href="/dashboard.html">
       <span class="nav-icon">📊</span> Dashboard
     </a>
+
+    <a class="nav-item" href="/setting.html">
+      <span class="nav-icon">⚙️</span> ตั้งค่า
+    </a>
+
     <a class="nav-item" href="#" onclick="logout()" style="margin-top:auto;">
         <span class="nav-icon">🚪</span> ออกจากระบบ
     </a>
-
-
-    <div class="nav-item" style="opacity:0.4; cursor:default;">⚙️ ตั้งค่า</div>
   </div>
 
   <div class="main">
-    <!-- Topbar -->
     <div class="topbar">
       <div class="topbar-title" id="topbar-title">จัดการข่าวประชาสัมพันธ์</div>
       <button class="btn-new" onclick="openCreate()" id="btn-new-top">+ เพิ่มข่าวใหม่</button>
     </div>
 
     <div class="content">
-      <!-- Toast -->
       <div class="toast" id="toast"></div>
 
-      <!-- ===== LIST VIEW ===== -->
       <div id="view-list">
         <div class="filter-row">
           <input class="search-box" type="text" id="search-input" placeholder="🔍  ค้นหาหัวข้อข่าว..." oninput="renderList()">
@@ -579,7 +619,6 @@
         </div>
       </div>
 
-      <!-- ===== FORM VIEW ===== -->
       <div id="view-form">
         <div class="form-header">
           <button class="btn-back" onclick="backToList()">← กลับ</button>
@@ -607,7 +646,7 @@
               <div class="row2">
                 <div class="field">
                   <label for="f-date">วันที่เผยแพร่</label>
-                  <input type="text" id="f-date" placeholder="เช่น 5 พ.ค. 2568" oninput="livePreview()">
+                  <input type="date" id="f-date" oninput="livePreview()">
                 </div>
                 <div class="field">
                   <label for="f-status">สถานะ</label>
@@ -626,38 +665,38 @@
                 <button class="tab-btn" id="ftab-pdf" onclick="fSwitchTab('pdf')">📄 PDF</button>
               </div>
 
+              <!-- Image gallery (multi-image upload) -->
               <div id="fsec-img">
                 <div class="drop-zone" id="fdrop-img"
                   onclick="document.getElementById('f-img-input').click()"
                   ondragover="fOnDrag(event,'img')" ondragleave="fOffDrag('img')" ondrop="fOnDrop(event,'img')">
                   <div class="drop-icon">🖼</div>
-                  <p class="drop-text">คลิกหรือลากรูปมาวาง</p>
-                  <p class="drop-sub">PNG, JPG ไม่เกิน 5MB</p>
+                  <p class="drop-text">คลิกหรือลากรูปมาวาง (เลือกได้หลายรูป)</p>
+                  <p class="drop-sub">PNG, JPG ไม่เกิน 5MB ต่อรูป — รูปแรกจะเป็นภาพปก</p>
                 </div>
-                <div class="img-preview-wrap" id="fimg-preview">
-                  <img id="fimg-thumb" src="" alt="">
-                  <button class="img-remove" onclick="fRemoveImg()">✕</button>
-                </div>
-                <input type="file" id="f-img-input" accept="image/*" style="display:none">
+                <div class="img-gallery" id="img-gallery"></div>
+                <input type="file" id="f-img-input" accept="image/*" multiple style="display:none">
               </div>
 
+              <!-- PDF → Google Drive link -->
               <div id="fsec-pdf" style="display:none;">
-                <div class="drop-zone pdf-mode" id="fdrop-pdf"
-                  onclick="document.getElementById('f-pdf-input').click()"
-                  ondragover="fOnDrag(event,'pdf')" ondragleave="fOffDrag('pdf')" ondrop="fOnDrop(event,'pdf')">
-                  <div class="drop-icon">📄</div>
-                  <p class="drop-text">คลิกหรือลากไฟล์ PDF มาวาง</p>
-                  <p class="drop-sub">PDF ไม่เกิน 20MB</p>
+                <label class="pdf-link-label">🔗 วาง Google Drive link หรือ URL ของเอกสาร</label>
+                <div class="pdf-link-row">
+                  <input type="text" class="pdf-link-input" id="f-pdf-link"
+                    placeholder="https://drive.google.com/file/d/.../view"
+                    oninput="fHandlePdfLink(this.value)">
+                  <button type="button" class="pdf-link-clear" onclick="fRemovePdf()">✕ ล้าง</button>
                 </div>
+                <p class="pdf-link-hint">รองรับ Google Drive, OneDrive, Dropbox หรือ URL ตรงของไฟล์ PDF</p>
+
                 <div class="pdf-file-row" id="fpdf-row">
                   <div class="pdf-icon-box">PDF</div>
                   <div class="pdf-info">
                     <div class="pdf-name" id="fpdf-name">-</div>
-                    <div class="pdf-size" id="fpdf-size">-</div>
+                    <div class="pdf-size" id="fpdf-size">🔗 Google Drive</div>
                   </div>
-                  <button class="pdf-remove" onclick="fRemovePdf()">✕</button>
+                  <a id="fpdf-preview-link" class="pdf-open-link" href="#" target="_blank" rel="noopener">เปิด ↗</a>
                 </div>
-                <input type="file" id="f-pdf-input" accept="application/pdf" style="display:none">
               </div>
             </div>
 
@@ -667,13 +706,13 @@
             </div>
           </div>
 
-          <!-- Right: Preview -->
           <div>
             <div class="preview-section-title">ตัวอย่าง</div>
             <div class="preview-card">
               <div class="prev-img-area" id="prev-img-area">
                 <span class="prev-placeholder">🖼</span>
                 <img id="prev-cover" src="" alt="">
+                <span class="prev-img-count" id="prev-img-count"></span>
               </div>
               <div class="prev-body">
                 <div class="prev-badge" id="prev-badge">หมวดหมู่</div>
@@ -690,7 +729,6 @@
   </div>
 </div>
 
-<!-- Delete Modal -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
     <div class="modal-icon">🗑️</div>
@@ -704,27 +742,57 @@
 </div>
 
 <script>
-  // ===== DATA =====
-  var newsList = [
-    { id: 1, badge: 'บริการ', title: 'ระบบลงทะเบียนออนไลน์เปิดให้บริการแล้ว', desc: 'นักศึกษาสามารถลงทะเบียนผ่านระบบออนไลน์ได้ตั้งแต่วันนี้เป็นต้นไป', date: '5 พ.ค. 2568', status: 'เผยแพร่แล้ว', imgSrc: '', pdfName: '' },
-    { id: 2, badge: 'ประกาศ', title: 'ปิดให้บริการชั่วคราวเพื่อบำรุงรักษาระบบ', desc: 'ระบบจะปิดให้บริการในวันเสาร์ที่ 10 พ.ค. 2568 เวลา 22:00 - 24:00 น.', date: '3 พ.ค. 2568', status: 'เผยแพร่แล้ว', imgSrc: '', pdfName: '' },
-    { id: 3, badge: 'กิจกรรม', title: 'งานสัมมนาวิชาการประจำปี 2568', desc: 'ขอเชิญนักศึกษาและบุคลากรเข้าร่วมงานสัมมนาวิชาการประจำปี', date: '1 พ.ค. 2568', status: 'ฉบับร่าง', imgSrc: '', pdfName: 'program_2568.pdf' },
-  ];
+  var newsList    = [];
+  var editingId    = null;
+  var deleteId     = null;
+  var fActiveTab   = 'img';
+  var fPdfName     = '';
 
-  var nextId = 4;
-  var editingId = null;
-  var deleteId = null;
-  var fActiveTab = 'img';
-  var fImgData = '';
-  var fPdfName = '';
+  // ── Image gallery state ──────────────────────────
+  // newImageFiles: File objects pending upload (new images selected this session)
+  // existingImages: image paths already saved in DB (only relevant when editing)
+  // removedExistingImages: paths the user removed from the existing gallery
+  var newImageFiles        = [];
+  var existingImages       = [];
+  var removedExistingImages = [];
 
-  // ===== INIT =====
   document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('f-img-input').addEventListener('change', function() { fHandleImg(this.files[0]); });
-    document.getElementById('f-pdf-input').addEventListener('change', function() { fHandlePdf(this.files[0]); });
-    renderList();
-    updateBadgeFilter();
+    document.getElementById('f-img-input').addEventListener('change', function() {
+      addNewImageFiles(Array.from(this.files));
+      this.value = ''; // allow re-selecting the same file again later
+    });
+    loadNews();
   });
+
+  // ===== LOAD FROM API =====
+  async function loadNews() {
+    try {
+      showLoading(true);
+      var data = await fetch('/api/news').then(function(r){ return r.json(); });
+      newsList = data.map(function(n) {
+        return {
+          id    : n.id,
+          badge : n.tag || '',
+          title : n.title || '',
+          desc  : n.subtitle || '',
+          date  : n.date || '',
+          status: n.status === 'published' ? 'เผยแพร่แล้ว' : 'ฉบับร่าง',
+          imgSrc: n.img_path ? '/' + n.img_path : '',
+        };
+      });
+      updateBadgeFilter();
+      renderList();
+    } catch(e) {
+      showToast('โหลดข้อมูลไม่สำเร็จ: ' + e.message, true);
+    } finally {
+      showLoading(false);
+    }
+  }
+
+  function showLoading(on) {
+    var body = document.getElementById('news-list-body');
+    if (on) body.innerHTML = '<div class="empty-state"><div class="big">⏳</div>กำลังโหลด...</div>';
+  }
 
   // ===== LIST =====
   function renderList() {
@@ -780,36 +848,40 @@
     document.getElementById('view-form').style.display = 'block';
   }
 
-  function openEdit(id) {
-    var n = newsList.find(function(x) { return x.id === id; });
+  async function openEdit(id) {
+    var n = newsList.find(function(x) { return x.id == id; });
     if (!n) return;
     editingId = id;
     resetForm();
+
     document.getElementById('f-badge').value = n.badge;
     document.getElementById('f-title').value = n.title;
     document.getElementById('f-desc').value = n.desc;
-    document.getElementById('f-date').value = n.date;
     document.getElementById('f-status').value = n.status;
 
-    if (n.imgSrc) {
-      fImgData = n.imgSrc;
-      document.getElementById('fdrop-img').style.display = 'none';
-      document.getElementById('fimg-preview').style.display = 'block';
-      document.getElementById('fimg-thumb').src = n.imgSrc;
-      document.getElementById('prev-cover').src = n.imgSrc;
-      document.getElementById('prev-cover').style.display = 'block';
-      document.querySelector('.prev-placeholder').style.display = 'none';
+    var rawDate = n.date || '';
+    var dmyMatch = rawDate.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (dmyMatch) {
+      rawDate = dmyMatch[3] + '-' + dmyMatch[2].padStart(2,'0') + '-' + dmyMatch[1].padStart(2,'0');
     }
+    document.getElementById('f-date').value = rawDate;
 
-    if (n.pdfName) {
-      fPdfName = n.pdfName;
-      fSwitchTab('pdf');
-      document.getElementById('fdrop-pdf').style.display = 'none';
-      document.getElementById('fpdf-row').style.display = 'flex';
-      document.getElementById('fpdf-name').textContent = n.pdfName;
-      document.getElementById('fpdf-size').textContent = '';
-      document.getElementById('prev-pdf').style.display = 'flex';
-      document.getElementById('prev-pdf-name').textContent = n.pdfName;
+    // Load full detail (gallery images + pdf) from API
+    try {
+      var detail = await fetch('/api/news/' + id).then(function(r){ return r.json(); });
+
+      existingImages = (detail.images || []).map(function(p) { return '/' + p; });
+      renderGallery();
+
+      if (detail.pdfs && detail.pdfs.length > 0) {
+        var pdf = detail.pdfs[0];
+        fSwitchTab('pdf');
+        var linkInput = document.getElementById('f-pdf-link');
+        linkInput.value = pdf.file_path || '';
+        fHandlePdfLink(pdf.file_path || '');
+      }
+    } catch(e) {
+      console.warn('Could not load news detail:', e);
     }
 
     livePreview();
@@ -820,32 +892,68 @@
     document.getElementById('view-form').style.display = 'block';
   }
 
-  function saveNews() {
+  async function saveNews() {
     var title = document.getElementById('f-title').value.trim();
     if (!title) { showToast('กรุณากรอกหัวข้อข่าว', true); return; }
 
-    var data = {
-      badge: document.getElementById('f-badge').value.trim() || 'ทั่วไป',
-      title: title,
-      desc: document.getElementById('f-desc').value.trim(),
-      date: document.getElementById('f-date').value.trim(),
-      status: document.getElementById('f-status').value,
-      imgSrc: fImgData,
-      pdfName: fPdfName,
-    };
+    var btn = document.querySelector('.btn-save');
+    btn.disabled = true;
+    btn.textContent = '⏳ กำลังบันทึก...';
 
-    if (editingId !== null) {
-      var idx = newsList.findIndex(function(x) { return x.id === editingId; });
-      if (idx > -1) { newsList[idx] = Object.assign({ id: editingId }, data); }
-      showToast('แก้ไขข่าวเรียบร้อยแล้ว ✓');
-    } else {
-      newsList.unshift(Object.assign({ id: nextId++ }, data));
-      showToast('เพิ่มข่าวใหม่เรียบร้อยแล้ว ✓');
+    try {
+      var statusVal = document.getElementById('f-status').value;
+      var statusAPI = (statusVal === 'เผยแพร่แล้ว') ? 'published' : 'draft';
+
+      var fd = new FormData();
+      fd.append('tag',      document.getElementById('f-badge').value.trim() || 'ทั่วไป');
+      fd.append('title',    title);
+      fd.append('subtitle', document.getElementById('f-desc').value.trim());
+      fd.append('content',  document.getElementById('f-desc').value.trim());
+      fd.append('author',   'สภานักศึกษา มหาวิทยาลัยมหิดล');
+      fd.append('status',   statusAPI);
+      fd.append('date',     document.getElementById('f-date').value.trim());
+
+      // Append every newly-selected image file (field name: images)
+      newImageFiles.forEach(function(file) {
+        fd.append('images', file);
+      });
+
+      // PDF link
+      var pdfLinkInput = document.getElementById('f-pdf-link');
+      var pdfLinkVal = pdfLinkInput ? pdfLinkInput.value.trim() : '';
+      if (editingId !== null) {
+        fd.append('pdf_link', pdfLinkVal); // always send on edit (empty = remove)
+      } else if (pdfLinkVal) {
+        fd.append('pdf_link', pdfLinkVal);
+      }
+
+      var url, method;
+      if (editingId !== null) {
+        url = '/api/news/' + editingId;
+        method = 'PUT';
+        // If the user removed any existing gallery images, tell backend to delete them individually first
+        for (var i = 0; i < removedExistingImages.length; i++) {
+          await API.deleteNewsImage(editingId, removedExistingImages[i].replace(/^\//, ''));
+        }
+      } else {
+        url = '/api/news';
+        method = 'POST';
+      }
+
+      var res = await fetch(url, { method: method, body: fd });
+      var result = await res.json();
+      if (result.error) throw new Error(result.error);
+
+      showToast(editingId !== null ? 'แก้ไขข่าวเรียบร้อยแล้ว ✓' : 'เพิ่มข่าวใหม่เรียบร้อยแล้ว ✓');
+
+      await loadNews();
+      backToList();
+    } catch(e) {
+      showToast('เกิดข้อผิดพลาด: ' + e.message, true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '💾 บันทึก';
     }
-
-    updateBadgeFilter();
-    backToList();
-    renderList();
   }
 
   function openDelete(id) {
@@ -860,12 +968,18 @@
     deleteId = null;
   }
 
-  function confirmDelete() {
-    newsList = newsList.filter(function(x) { return x.id !== deleteId; });
-    closeModal();
-    renderList();
-    updateBadgeFilter();
-    showToast('ลบข่าวเรียบร้อยแล้ว ✓');
+  async function confirmDelete() {
+    try {
+      var res = await fetch('/api/news/' + deleteId, { method: 'DELETE' });
+      var result = await res.json();
+      if (result.error) throw new Error(result.error);
+      closeModal();
+      await loadNews();
+      showToast('ลบข่าวเรียบร้อยแล้ว ✓');
+    } catch(e) {
+      closeModal();
+      showToast('เกิดข้อผิดพลาด: ' + e.message, true);
+    }
   }
 
   function backToList() {
@@ -882,9 +996,15 @@
     document.getElementById('f-desc').value = '';
     document.getElementById('f-date').value = '';
     document.getElementById('f-status').value = 'เผยแพร่แล้ว';
-    fImgData = ''; fPdfName = '';
+
+    newImageFiles         = [];
+    existingImages        = [];
+    removedExistingImages = [];
+    renderGallery();
+
+    fPdfName = '';
     fSwitchTab('img');
-    fRemoveImg(); fRemovePdf();
+    fRemovePdf();
     livePreview();
   }
 
@@ -897,7 +1017,6 @@
     document.getElementById('prev-date').textContent = document.getElementById('f-date').value || '';
   }
 
-  // Tab
   function fSwitchTab(tab) {
     fActiveTab = tab;
     document.getElementById('fsec-img').style.display = tab === 'img' ? 'block' : 'none';
@@ -906,63 +1025,120 @@
     document.getElementById('ftab-pdf').classList.toggle('active', tab === 'pdf');
   }
 
-  // Image
-  function fHandleImg(file) {
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      fImgData = e.target.result;
-      document.getElementById('fdrop-img').style.display = 'none';
-      document.getElementById('fimg-preview').style.display = 'block';
-      document.getElementById('fimg-thumb').src = fImgData;
-      document.getElementById('prev-cover').src = fImgData;
-      document.getElementById('prev-cover').style.display = 'block';
-      document.querySelector('.prev-placeholder').style.display = 'none';
-    };
-    reader.readAsDataURL(file);
+  // ===== IMAGE GALLERY (multi-image) =====
+  function addNewImageFiles(files) {
+    files.forEach(function(f) {
+      if (f && f.type.startsWith('image/')) newImageFiles.push(f);
+    });
+    renderGallery();
   }
 
-  function fRemoveImg() {
-    fImgData = '';
-    document.getElementById('fdrop-img').style.display = 'block';
-    document.getElementById('fimg-preview').style.display = 'none';
-    document.getElementById('f-img-input').value = '';
-    document.getElementById('prev-cover').style.display = 'none';
-    document.querySelector('.prev-placeholder').style.display = '';
+  function removeExistingImage(idx) {
+    var removed = existingImages.splice(idx, 1)[0];
+    if (removed) removedExistingImages.push(removed);
+    renderGallery();
   }
 
-  // PDF
-  function fHandlePdf(file) {
-    if (!file) return;
-    fPdfName = file.name;
-    document.getElementById('fdrop-pdf').style.display = 'none';
+  function removeNewImage(idx) {
+    newImageFiles.splice(idx, 1);
+    renderGallery();
+  }
+
+  function renderGallery() {
+    var gallery = document.getElementById('img-gallery');
+    var html = '';
+    var slotIndex = 0;
+
+    // Existing images (already saved in DB — only present when editing)
+    existingImages.forEach(function(src, i) {
+      html += '<div class="img-gallery-item">'
+        + '<img src="' + src + '" alt="">'
+        + (slotIndex === 0 ? '<span class="cover-badge">ปก</span>' : '')
+        + '<button class="img-remove-x" onclick="removeExistingImage(' + i + ')" type="button">✕</button>'
+        + '</div>';
+      slotIndex++;
+    });
+
+    // Newly selected images (pending upload, shown via local blob preview)
+    newImageFiles.forEach(function(file, i) {
+      var blobUrl = URL.createObjectURL(file);
+      html += '<div class="img-gallery-item">'
+        + '<img src="' + blobUrl + '" alt="">'
+        + (slotIndex === 0 ? '<span class="cover-badge">ปก</span>' : '')
+        + '<button class="img-remove-x" onclick="removeNewImage(' + i + ')" type="button">✕</button>'
+        + '</div>';
+      slotIndex++;
+    });
+
+    html += '<div class="img-add-more" onclick="document.getElementById(\'f-img-input\').click()" title="เพิ่มรูป">+</div>';
+
+    gallery.innerHTML = html;
+
+    // Update live preview cover + count
+    var totalImgs = existingImages.length + newImageFiles.length;
+    var coverEl   = document.getElementById('prev-cover');
+    var countEl   = document.getElementById('prev-img-count');
+    var phEl      = document.querySelector('.prev-placeholder');
+
+    if (totalImgs > 0) {
+      var coverSrc = existingImages[0] || URL.createObjectURL(newImageFiles[0]);
+      coverEl.src = coverSrc;
+      coverEl.style.display = 'block';
+      phEl.style.display = 'none';
+      if (totalImgs > 1) {
+        countEl.textContent = '📷 ' + totalImgs;
+        countEl.style.display = 'inline-block';
+      } else {
+        countEl.style.display = 'none';
+      }
+    } else {
+      coverEl.style.display = 'none';
+      phEl.style.display = '';
+      countEl.style.display = 'none';
+    }
+  }
+
+  function fOnDrag(e, type) { e.preventDefault(); document.getElementById('fdrop-' + type).classList.add('drag-over'); }
+  function fOffDrag(type) { document.getElementById('fdrop-' + type).classList.remove('drag-over'); }
+  function fOnDrop(e, type) {
+    e.preventDefault(); fOffDrag(type);
+    if (type === 'img') {
+      addNewImageFiles(Array.from(e.dataTransfer.files));
+    }
+  }
+
+  // PDF → Google Drive link
+  function fHandlePdfLink(url) {
+    url = (url || '').trim();
+    if (!url) { fRemovePdf(); return; }
+
+    var displayName = url.includes('drive.google.com') ? 'Google Drive Document'
+                     : url.includes('onedrive')         ? 'OneDrive Document'
+                     : url.includes('dropbox')           ? 'Dropbox Document'
+                     : (url.split('/').pop().split('?')[0] || 'เอกสารแนบ');
+
+    var hostname = '';
+    try { hostname = new URL(url).hostname; } catch(e) { hostname = 'link'; }
+
+    fPdfName = url;
+
     document.getElementById('fpdf-row').style.display = 'flex';
-    document.getElementById('fpdf-name').textContent = file.name;
-    var kb = file.size / 1024;
-    document.getElementById('fpdf-size').textContent = kb > 1024 ? (kb/1024).toFixed(1)+' MB' : Math.round(kb)+' KB';
+    document.getElementById('fpdf-name').textContent = displayName;
+    document.getElementById('fpdf-size').textContent = '🔗 ' + hostname;
+    document.getElementById('fpdf-preview-link').href = url;
+
     document.getElementById('prev-pdf').style.display = 'flex';
-    document.getElementById('prev-pdf-name').textContent = file.name;
+    document.getElementById('prev-pdf-name').textContent = displayName;
   }
 
   function fRemovePdf() {
     fPdfName = '';
-    document.getElementById('fdrop-pdf').style.display = 'block';
+    var linkInput = document.getElementById('f-pdf-link');
+    if (linkInput) linkInput.value = '';
     document.getElementById('fpdf-row').style.display = 'none';
-    document.getElementById('f-pdf-input').value = '';
     document.getElementById('prev-pdf').style.display = 'none';
   }
 
-  // Drag & drop
-  function fOnDrag(e, type) { e.preventDefault(); document.getElementById('fdrop-'+type).classList.add('drag-over'); }
-  function fOffDrag(type) { document.getElementById('fdrop-'+type).classList.remove('drag-over'); }
-  function fOnDrop(e, type) {
-    e.preventDefault(); fOffDrag(type);
-    var f = e.dataTransfer.files[0];
-    if (!f) return;
-    if (type === 'img') fHandleImg(f); else fHandlePdf(f);
-  }
-
-  // Toast
   function showToast(msg, isError) {
     var t = document.getElementById('toast');
     t.textContent = msg;
@@ -971,12 +1147,10 @@
     setTimeout(function() { t.style.display = 'none'; }, 3000);
   }
 
-  // Close modal on overlay click
   document.getElementById('modal-overlay').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
 
-  // logout
   function logout() {
     sessionStorage.removeItem('isAdmin');
     sessionStorage.removeItem("adminUser");
