@@ -221,18 +221,14 @@
       <a href="/index.html">← กลับหน้าหลัก</a>
     </div>
 
-    <div class="demo-hint">
+    <!-- <div class="demo-hint">
       🔑 <strong>Demo credentials:</strong><br>
       Username: <strong>admin</strong><br>
       Password: <strong>admin1234</strong>
-    </div>
+    </div> -->
   </div>
 
   <script>
-    // Demo credentials (in production replace with real auth)
-    var ADMIN_USER = 'admin';
-    var ADMIN_PASS = 'admin1234';
-
     // Where to go after login
     var REDIRECT_AFTER_LOGIN = '/upload.html';
 
@@ -241,7 +237,7 @@
       window.location.href = REDIRECT_AFTER_LOGIN;
     }
 
-    function doLogin() {
+    async function doLogin() {
       var username = document.getElementById('username').value.trim();
       var password = document.getElementById('password').value;
       var errMsg   = document.getElementById('error-msg');
@@ -263,26 +259,22 @@
         return;
       }
 
-      // Show loading state
       btn.disabled = true;
       btn.textContent = 'กำลังตรวจสอบ...';
       loading.style.display = 'block';
 
-      // Simulate async check (replace with real API call)
-      setTimeout(function () {
-        if (username === ADMIN_USER && password === ADMIN_PASS) {
-          // Save session
-          sessionStorage.setItem('isAdmin', 'true');
-          sessionStorage.setItem('adminUser', username);
-          btn.textContent = '✓ เข้าสู่ระบบสำเร็จ';
-          btn.style.background = '#3B6D11';
-          loading.textContent = 'กำลังนำคุณไปยังหน้าจัดการข่าว...';
-          setTimeout(function () {
-            window.location.href = REDIRECT_AFTER_LOGIN;
-          }, 800);
-        } else {
-          // Wrong credentials
-          errMsg.textContent = '⚠️ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
+      try {
+        // เช็ค username/password กับ database จริงเท่านั้น
+        // ไม่มี fallback hardcode — รหัสผ่านล่าสุดที่ตั้งไว้ใน settings เท่านั้นที่ใช้ได้
+        var res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: username, password: password }),
+        });
+        var result = await res.json();
+
+        if (result.error) {
+          errMsg.textContent = '⚠️ ' + result.error;
           errMsg.style.display = 'flex';
           uInput.classList.add('error');
           pInput.classList.add('error');
@@ -290,8 +282,25 @@
           btn.textContent = 'เข้าสู่ระบบ';
           loading.style.display = 'none';
           document.getElementById('password').value = '';
+        } else {
+          // Login สำเร็จ — บันทึก session
+          sessionStorage.setItem('isAdmin', 'true');
+          sessionStorage.setItem('adminUser', result.username);
+          sessionStorage.setItem('adminDisplayName', result.display_name || result.username);
+          btn.textContent = '✓ เข้าสู่ระบบสำเร็จ';
+          btn.style.background = '#3B6D11';
+          loading.textContent = 'กำลังนำคุณไปยังหน้าจัดการข่าว...';
+          setTimeout(function () {
+            window.location.href = REDIRECT_AFTER_LOGIN;
+          }, 800);
         }
-      }, 800);
+      } catch (e) {
+        errMsg.textContent = '⚠️ เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ กรุณาลองใหม่';
+        errMsg.style.display = 'flex';
+        btn.disabled = false;
+        btn.textContent = 'เข้าสู่ระบบ';
+        loading.style.display = 'none';
+      }
     }
 
     function togglePw() {
