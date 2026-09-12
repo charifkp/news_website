@@ -5,8 +5,8 @@
 node_modules/
 npm-debug.log*
  
-# Uploads (user files)
-frontend/src/uploads/
+
+
  
 # OS
 .DS_Store
