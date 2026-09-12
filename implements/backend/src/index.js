@@ -660,4 +660,8 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log('  PUT    /api/admin/password                → change password');
   console.log('  GET    /api/admin/list                    → list admin accounts');
   console.log('  POST   /api/admin/list                    → create admin account');
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 38c5ed2 (news update)

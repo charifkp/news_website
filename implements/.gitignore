@@ -5,10 +5,19 @@
 node_modules/
 npm-debug.log*
  
+<<<<<<< HEAD
 
 
+=======
+# Uploads (user files)
+frontend/src/uploads/
+>>>>>>> 38c5ed2 (news update)
  
 # OS
 .DS_Store
 Thumbs.db
+<<<<<<< HEAD
  
+=======
+ 
+>>>>>>> 38c5ed2 (news update)

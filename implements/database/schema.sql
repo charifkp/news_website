@@ -297,4 +297,9 @@ WHERE id = 1;
 -- verify
 SELECT * FROM admins;
 show tables;
+<<<<<<< HEAD
         
+=======
+        
+ 
+>>>>>>> 38c5ed2 (news update)

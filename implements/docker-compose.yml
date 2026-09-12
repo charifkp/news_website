@@ -71,4 +71,8 @@ volumes:
   db_data:
     driver: local
   uploads_data:       # ← named volume สำหรับเก็บไฟล์ที่ upload
+<<<<<<< HEAD
     driver: local
+=======
+    driver: local
+>>>>>>> 38c5ed2 (news update)
