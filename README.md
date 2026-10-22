@@ -2,4 +2,5 @@
 
 ## Live Demo
 
-🌐 [Website: https://news-website-xhg9.onrender.com](https://news-website-yl0k.onrender.com)
+🌐 [https://charifkp.github.io/news_website/]
+ 
