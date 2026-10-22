@@ -3,6 +3,9 @@ name: Deploy Backend
 on:
   push:
     branches: [main]
+    paths:
+      - 'implements/backend/**'
+      - 'docker-compose.yml'
 
 jobs:
   deploy:
