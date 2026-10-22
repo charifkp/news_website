@@ -2,5 +2,5 @@
 
 ## Live Demo
 
-🌐 [https://charifkp.github.io/news_website/]
+🌐 (https://charifkp.github.io/news_website/)
  
