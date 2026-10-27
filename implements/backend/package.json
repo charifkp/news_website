@@ -1,0 +1,32 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend of project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "jest",
+    "test:cov": "jest --coverage",
+    "test:e2e": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "formidable": "^3.5.4",
+    "mysql2": "^3.22.5"
+  },
+  "devDependencies": {
+    "jest": "^30.5.2",
+    "nodemon": "^3.0.0",
+    "supertest": "^7.3.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "directories": {
+    "test": "tests"
+  }
+}
