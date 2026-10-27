@@ -22,7 +22,7 @@ jobs:
           cache: npm
           cache-dependency-path: implements/backend/package-lock.json
       - run: npm ci
-      - run: npm run test:cov
+      - run: npm test -- --coverage
       - uses: actions/upload-artifact@v4
         if: always()
         with:
