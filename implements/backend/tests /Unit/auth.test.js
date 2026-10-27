@@ -1,8 +1,9 @@
 const http = require('http');
 const { Readable } = require('stream');
-const mysql = require('../../src/node_modules/mysql2/promise');
+const mysql = require('mysql2/promise');
+// const mysql = require('../../src/node_modules/mysql2/promise');
 
-jest.mock('../../src/node_modules/mysql2/promise', () => ({
+jest.mock('mysql2/promise', () => ({
   createPool: jest.fn(),
 }));
 
