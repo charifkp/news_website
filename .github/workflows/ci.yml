@@ -1,4 +1,4 @@
-name: CI
+name: CI & SonarQube
 
 on:
   push:
@@ -9,25 +9,33 @@ on:
 
 jobs:
   unit-and-integration:
-    name: Unit + integration tests
+    name: Unit + Integration tests & SonarQube
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: implements/backend
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # จำเป็นสำหรับ SonarQube เพื่ออ่านประวัติ Git
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
           cache-dependency-path: implements/backend/package-lock.json
-      - run: npm ci
-      - run: npm test -- --coverage
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: coverage
-          path: implements/backend/coverage
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} # (ถ้าใช้ SonarCloud อาจจะไม่ต้องใส่ตัวนี้ หรือใส่ถ้ามี)
 
   # Runs the real stack (docker compose) + Playwright. Manual trigger only, because it needs
   # your compose file to boot MySQL + seed an admin account. Run it from the Actions tab.
