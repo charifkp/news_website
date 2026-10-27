@@ -36,6 +36,9 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} # (ถ้าใช้ SonarCloud อาจจะไม่ต้องใส่ตัวนี้ หรือใส่ถ้ามี)
+        with:
+          args: >
+            -Dsonar.host.url=https://sonarcloud.io
 
   # Runs the real stack (docker compose) + Playwright. Manual trigger only, because it needs
   # your compose file to boot MySQL + seed an admin account. Run it from the Actions tab.
