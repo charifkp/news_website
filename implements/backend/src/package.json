@@ -1,12 +1,14 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend server for News Project - สภานักศึกษา มหาวิทยาลัยมหิดล",
+  "description": "Backend of project",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test:cov": "jest --coverage"
+    "test": "jest",
+    "test:cov": "jest --coverage",
+    "test:e2e": "playwright test"
   },
   "keywords": [],
   "author": "",
@@ -17,9 +19,14 @@
     "mysql2": "^3.22.5"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0"
+    "jest": "^30.5.2",
+    "nodemon": "^3.0.0",
+    "supertest": "^7.3.1"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "directories": {
+    "test": "tests"
   }
 }
