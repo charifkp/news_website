@@ -627,19 +627,30 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  const reqUrl  = urlPath === '/' ? '/index.html' : urlPath;
-  const filepath = path.join(FRONTEND_SRC, reqUrl);
-  const ext      = String(path.extname(filepath)).toLowerCase();
+  const reqUrl = urlPath === '/' ? '/index.html' : urlPath;
+
+// 1. กำหนดและตรวจสอบความปลอดภัยของพาร์ท (ป้องกัน Path Traversal)
+  const safeBase = path.resolve(FRONTEND_SRC);
+  const filepath = path.resolve(safeBase, '.' + reqUrl);
+
+// 2. เช็คว่าพาร์ทที่ประกอบได้ยังอยู่ในโฟลเดอร์ FRONTEND_SRC จริงๆ หรือไม่
+  if (!filepath.startsWith(safeBase)) {
+      res.writeHead(403, { 'Content-Type': 'text/plain' });
+      res.end('403 Forbidden');
+      return;
+  }
+
+  const ext = String(path.extname(filepath)).toLowerCase();
   const contentType = mimeTypes[ext] || 'application/octet-stream';
 
   fs.readFile(filepath, (err, data) => {
-    if (err) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('404 Not Found');
-    } else {
-      res.writeHead(200, { 'Content-Type': contentType });
-      res.end(data);
-    }
+      if (err) {
+          res.writeHead(404, { 'Content-Type': 'text/plain' });
+          res.end('404 Not Found');
+      } else {
+          res.writeHead(200, { 'Content-Type': contentType });
+          res.end(data);
+      }
   });
 });
 
