@@ -470,4 +470,85 @@ describe('news backend – full route coverage', () => {
       ['DELETE', '/api/news/1', {}],
       ['DELETE', `/api/news/1/images/${enc}`, {}],
       ['POST', '/api/admin/login', { body: { username: 'a', password: 'b' } }],
-      ['GET',
+      ['GET', '/api/admin/profile', {}],
+      ['PUT', '/api/admin/profile', { body: { display_name: 'N' } }],
+      ['PUT', '/api/admin/password', { body: { current_password: 'a', new_password: 'long-enough' } }],
+      ['GET', '/api/admin/list', {}],
+      ['POST', '/api/admin/list', { body: { username: 'a', password: 'b' } }],
+      ['GET', '/api/categories', {}],
+      ['GET', '/api/dashboard', {}],
+    ];
+
+    test.each(cases)('%s %s', async (method, url, opts) => {
+      query.mockRejectedValue(new Error('db down'));
+      const r = await sendRequest(method, url, opts);
+      expect(r.statusCode).toBe(500);
+      expect(r.json.error).toBe('db down');
+    });
+  });
+
+  // ── static files ─────────────────────────────────────
+  describe('static file serving', () => {
+    let readFile;
+
+    beforeEach(() => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+      readFile = jest.spyOn(fs, 'readFile').mockImplementation((p, cb) => cb(null, Buffer.from('file-content')));
+    });
+
+    test('serves index.html for "/"', async () => {
+      const r = await sendRequest('GET', '/');
+      expect(r.statusCode).toBe(200);
+      expect(r.headers['Content-Type']).toBe('text/html');
+      expect(readFile.mock.calls[0][0]).toMatch(/index\.html$/);
+    });
+
+    test('serves a css file with the right content type', async () => {
+      const r = await sendRequest('GET', '/css/style.css');
+      expect(r.headers['Content-Type']).toBe('text/css');
+    });
+
+    test('falls back to octet-stream for unknown extensions', async () => {
+      const r = await sendRequest('GET', '/file.xyz');
+      expect(r.headers['Content-Type']).toBe('application/octet-stream');
+    });
+
+    test('returns 404 when the static file does not exist', async () => {
+      readFile.mockImplementation((p, cb) => cb(new Error('ENOENT')));
+      const r = await sendRequest('GET', '/missing.html');
+      expect(r.statusCode).toBe(404);
+      expect(r.body).toBe('404 Not Found');
+    });
+
+    test('blocks path traversal outside the frontend folder', async () => {
+      const r = await sendRequest('GET', '/../secret.txt');
+      expect(r.statusCode).toBe(403);
+      expect(readFile).not.toHaveBeenCalled();
+    });
+
+    test('serves an uploaded image inline', async () => {
+      const r = await sendRequest('GET', '/uploads/photo.jpg');
+      expect(r.statusCode).toBe(200);
+      expect(r.headers).toEqual({ 'Content-Type': 'image/jpeg', 'Content-Disposition': 'inline' });
+    });
+
+    test('serves an uploaded pdf as an attachment with an encoded Thai filename', async () => {
+      const r = await sendRequest('GET', '/uploads/%E0%B9%80%E0%B8%AD%E0%B8%81.pdf');
+      expect(r.headers['Content-Type']).toBe('application/pdf');
+      expect(r.headers['Content-Disposition']).toMatch(/^attachment; filename\*=UTF-8''/);
+    });
+
+    test('handles an invalid URL-encoded upload name without crashing', async () => {
+      const r = await sendRequest('GET', '/uploads/%E0%A4%A');
+      expect(r.statusCode).toBe(200);
+      expect(r.headers['Content-Type']).toBe('application/octet-stream');
+    });
+
+    test('returns 404 when an uploaded file is missing', async () => {
+      readFile.mockImplementation((p, cb) => cb(new Error('ENOENT')));
+      const r = await sendRequest('GET', '/uploads/gone.jpg');
+      expect(r.statusCode).toBe(404);
+      expect(r.body).toBe('File not found');
+    });
+  });
+});
