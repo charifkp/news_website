@@ -10,7 +10,8 @@ FROM node:20-alpine
 WORKDIR /app
  
 # Copy package files first (layer caching)
-COPY package*.json ./
+# COPY package*.json ./
+COPY implements/backend/package*.json ./
  
 # Install dependencies
 RUN npm install --omit=dev
