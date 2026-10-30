@@ -11,7 +11,7 @@ services:
   backend:
     build:
       context: ./backend/src
-      dockerfile: Dockerfile
+      dockerfile: implements/backend/Dockerfile
     container_name: news_backend
     restart: unless-stopped
     ports:
@@ -19,7 +19,8 @@ services:
     volumes:
       # Mount frontend so backend can serve HTML/assets
       # - ./frontend/src:/app/../../frontend/src:ro
-      - ./frontend/src:/app/frontend_src
+      # - ./frontend/src:/app/frontend_src
+      - uploads_data:/app/frontend_src/uploads
     environment:
       - NODE_ENV=production
       - DB_HOST=db
@@ -47,7 +48,7 @@ services:
       - db_data:/var/lib/mysql                 # persist data
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -69,10 +70,7 @@ services:
 
 volumes:
   db_data:
-    driver: local
   uploads_data:       # ← named volume สำหรับเก็บไฟล์ที่ upload
  
-    driver: local
  
-    driver: local
  
