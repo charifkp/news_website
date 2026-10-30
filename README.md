@@ -2,5 +2,5 @@
 
 ## Live Demo
 
-🌐 [news_website](news-website-ruddy-kappa.vercel.app)
+🌐 [news_website](https://news-website-1-rgn3.onrender.com)
  
