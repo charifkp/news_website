@@ -28,7 +28,7 @@ COPY implements/backend/src/ ./
 
 
 # Copy frontend source (จากโฟลเดอร์ frontend/src เข้ามาใน container เพื่อให้แสดงหน้าเว็บสมบูรณ์)
-COPY implements/frontend/src/ ./frontend_src
+COPY implements/frontend/src/ ./frontend/
  
 # Expose the port the server listens on
 EXPOSE 3002
