@@ -8,8 +8,8 @@ const { formidable } = require('formidable');
 const PORT        = process.env.PORT || 3002;
 // In Docker: frontend mounted at /app/frontend_src
 // Locally:   ../../frontend/src relative to backend/src/
-const FRONTEND_SRC = process.env.NODE_ENV === 'production'
-  ? path.join(__dirname, 'frontend','src')
+const FRONTEND_SRC = process.env.NODE_ENV === 'production' 
+  ? path.join(__dirname, 'frontend_src')
   : path.join(__dirname, '..', '..', 'frontend', 'src');
 
 // Upload dir — always inside FRONTEND_SRC so files are served as static
