@@ -22,7 +22,7 @@ COPY src/ ./
 # Copy frontend into the container
 # COPY frontend/src/ ./frontend/src
 # Copy frontend into the container 
-# COPY ../../frontend/src ./frontend/src
+COPY ../frontend/src ./frontend_src
  
 # Expose the port the server listens on
 EXPOSE 3002
