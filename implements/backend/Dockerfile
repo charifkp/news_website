@@ -17,7 +17,8 @@ RUN npm install --omit=dev
  
 # Copy backend source
 # COPY . .
-COPY src/ ./
+# COPY src/ ./
+COPY implements/backend/src/ ./
 
 # Copy frontend into the container
 # COPY frontend/src/ ./frontend/src
@@ -26,7 +27,7 @@ COPY src/ ./
 
 
 # Copy frontend source (จากโฟลเดอร์ frontend/src เข้ามาใน container เพื่อให้แสดงหน้าเว็บสมบูรณ์)
-COPY ../frontend/src/ ./frontend_src
+COPY implements/frontend/src/ ./frontend_src
  
 # Expose the port the server listens on
 EXPOSE 3002
