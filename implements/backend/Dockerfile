@@ -22,7 +22,11 @@ COPY src/ ./
 # Copy frontend into the container
 # COPY frontend/src/ ./frontend/src
 # Copy frontend into the container 
-COPY frontend/src ./frontend_src
+# Copy backend source (จากโฟลเดอร์ backend/src)
+COPY implements/backend/src/ ./
+
+# Copy frontend source (จากโฟลเดอร์ frontend/src เข้ามาใน container เพื่อให้แสดงหน้าเว็บสมบูรณ์)
+COPY implements/frontend/src/ ./frontend_src
  
 # Expose the port the server listens on
 EXPOSE 3002
