@@ -1,15 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "implements/frontend/src/index.html",
-      "use": "@vercel/node"
-    }
-  ],
+  "cleanUrls": true,
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "implements/frontend/src/index.html"
+      "dest": "/src/$1"
     }
   ]
 }
