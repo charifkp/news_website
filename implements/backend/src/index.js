@@ -8,21 +8,15 @@ const { formidable } = require('formidable');
 const PORT        = process.env.PORT || 3002;
 // In Docker: frontend mounted at /app/frontend_src
 // Locally:   ../../frontend/src relative to backend/src/
-const candidates = [
-  path.join(__dirname, 'frontend_src'),                 // Docker
-  path.join(__dirname, '..', '..', 'frontend', 'src'),  // local / Vercel
-];
-const FRONTEND_SRC = candidates.find(p => fs.existsSync(p)) || candidates[0];
+const FRONTEND_SRC = process.env.NODE_ENV === 'production' 
+  ? path.join(__dirname, 'frontend_src')
+  : path.join(__dirname, '..', '..', 'frontend', 'src');
 
 // Upload dir — always inside FRONTEND_SRC so files are served as static
 const UPLOAD_DIR = path.join(FRONTEND_SRC, 'uploads');
 
 // Create upload directory if not exists
-try {
-  if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-} catch (e) {
-  console.warn('Cannot create upload dir (read-only FS):', e.message);
-}
+if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 console.log('FRONTEND_SRC:', FRONTEND_SRC);
 console.log('UPLOAD_DIR  :', UPLOAD_DIR);
@@ -130,7 +124,7 @@ function saveImageFile(imgFile) {
 }
 
 // ── ROUTER ─────────────────────────────────────────────
-const handler = async (req, res) => {
+const server = http.createServer(async (req, res) => {
   const urlPath = req.url.split('?')[0];
   const method  = req.method.toUpperCase();
 
@@ -658,37 +652,24 @@ const handler = async (req, res) => {
           res.end(data);
       }
   });
-};
+});
 
-// server.listen(PORT, '0.0.0.0', () => {
-//   console.log(`Server running at http://localhost:${PORT}`);
-//   console.log('API endpoints:');
-//   console.log('  GET    /api/news                       → list news');
-//   console.log('  GET    /api/news/:id                    → news detail (incl. images[])');
-//   console.log('  POST   /api/news                        → create news (multipart, images[])');
-//   console.log('  PUT    /api/news/:id                    → update news (multipart, images[])');
-//   console.log('  DELETE /api/news/:id                    → delete news');
-//   console.log('  DELETE /api/news/:id/images/:imgPath     → remove one gallery image');
-//   console.log('  GET    /api/categories                  → list categories');
-//   console.log('  GET    /api/dashboard                   → dashboard stats');
-//   console.log('  POST   /api/admin/login                   → verify login credentials');
-//   console.log('  GET    /api/admin/profile                → current admin info');
-//   console.log('  PUT    /api/admin/profile                → update display name');
-//   console.log('  PUT    /api/admin/password                → change password');
-//   console.log('  GET    /api/admin/list                    → list admin accounts');
-//   console.log('  POST   /api/admin/list                    → create admin account');
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+  console.log('API endpoints:');
+  console.log('  GET    /api/news                       → list news');
+  console.log('  GET    /api/news/:id                    → news detail (incl. images[])');
+  console.log('  POST   /api/news                        → create news (multipart, images[])');
+  console.log('  PUT    /api/news/:id                    → update news (multipart, images[])');
+  console.log('  DELETE /api/news/:id                    → delete news');
+  console.log('  DELETE /api/news/:id/images/:imgPath     → remove one gallery image');
+  console.log('  GET    /api/categories                  → list categories');
+  console.log('  GET    /api/dashboard                   → dashboard stats');
+  console.log('  POST   /api/admin/login                   → verify login credentials');
+  console.log('  GET    /api/admin/profile                → current admin info');
+  console.log('  PUT    /api/admin/profile                → update display name');
+  console.log('  PUT    /api/admin/password                → change password');
+  console.log('  GET    /api/admin/list                    → list admin accounts');
+  console.log('  POST   /api/admin/list                    → create admin account');
 
-// });
-const server = http.createServer(handler);
-
-// On Vercel the platform calls the exported handler itself, so don't listen there.
-if (!process.env.VERCEL) {
-  server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-    console.log('API endpoints:');
-    console.log('  GET    /api/news                       → list news');
-    // ...keep the rest of your console.log lines here if you want them
-  });
-}
-
-module.exports = handler;
+});
