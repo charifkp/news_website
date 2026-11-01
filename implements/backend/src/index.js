@@ -679,11 +679,16 @@ const handler = async (req, res) => {
 //   console.log('  POST   /api/admin/list                    → create admin account');
 
 // });
-module.exports = handler;
+const server = http.createServer(handler);
 
-if (require.main === module) {
-  http.createServer(handler).listen(PORT, '0.0.0.0', () => {
+// On Vercel the platform calls the exported handler itself, so don't listen there.
+if (!process.env.VERCEL) {
+  server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running at http://localhost:${PORT}`);
+    console.log('API endpoints:');
+    console.log('  GET    /api/news                       → list news');
+    // ...keep the rest of your console.log lines here if you want them
   });
 }
-// 
+
+module.exports = handler;
